@@ -1,0 +1,25 @@
+{
+  "name": "med-record",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch src/main.js",
+    "test": "node --test src/main.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorgmrqs/med-record.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/victorgmrqs/med-record/issues"
+  },
+  "homepage": "https://github.com/victorgmrqs/med-record#readme",
+  "devDependencies": {
+    "vitest": "^3.0.7"
+  }
+}
