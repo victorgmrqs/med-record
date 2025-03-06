@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "target": "es2022",
+      "module": "commonjs",
+      "baseUrl": "src",
+      "paths": {
+          "@middlewares/*": ["middlewares/*"],
+          "@useCases/*": ["useCases/*"],
+          "@repositories/*": ["repositories/*"],
+          "@shared/*": ["shared/*"],
+          "@routes/*": ["routes/*"],
+          "@infra/*": ["infra/*"],
+          "@tests/*": ["tests/*"]
+      },
+      "outDir": "./build",
+      "esModuleInterop": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "forceConsistentCasingInFileNames": true,
+      "resolveJsonModule": true,
+   }
+  }
+  

@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource med_record_db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Adicionando modelos gerados a partir do model.sql
+
+enum Sex {
+  M
+  Fí
+}
+
+model Doctor {
+  id             Int             @id @default(autoincrement())
+  name           String          @med_record_db.VarChar(150)
+  email          String          @unique @med_record_db.VarChar(50)
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  // Relações
+  doctorPatients DoctorPatient[]
+  appointments   Appointment[]
+  medicalRecords MedicalRecord[]
+}
+
+model Patient {
+  id             Int             @id @default(autoincrement())
+  name           String          @med_record_db.VarChar(150)
+  email          String          @unique @med_record_db.VarChar(50)
+  phoneNumber    String          @med_record_db.VarChar(15)
+  birthDate      DateTime        @med_record_db.Date
+  sex            Sex
+  height         Decimal         @med_record_db.Decimal(3, 2)
+  weight         Decimal         @med_record_db.Decimal(5, 2)
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  // Relações
+  doctorPatients DoctorPatient[]
+  appointments   Appointment[]
+  medicalRecords MedicalRecord[]
+}
+
+model DoctorPatient {
+  id         Int      @id @default(autoincrement())
+  doctor_id  Int
+  patient_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  // Relações
+  doctor     Doctor   @relation(fields: [doctor_id], references: [id])
+  patient    Patient  @relation(fields: [patient_id], references: [id])
+}
+
+model Appointment {
+  id              Int             @id @default(autoincrement())
+  doctor_id       Int
+  patient_id      Int
+  appointmentDate DateTime
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+  // Relações
+  doctor          Doctor          @relation(fields: [doctor_id], references: [id])
+  patient         Patient         @relation(fields: [patient_id], references: [id])
+  medicalRecords  MedicalRecord[]
+}
+
+model MedicalRecord {
+  id             Int         @id @default(autoincrement())
+  doctor_id      Int
+  patient_id     Int
+  appointment_id Int
+  description    String
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+  // Relações
+  doctor         Doctor      @relation(fields: [doctor_id], references: [id])
+  patient        Patient     @relation(fields: [patient_id], references: [id])
+  appointment    Appointment @relation(fields: [appointment_id], references: [id])
+}
