@@ -39,8 +39,8 @@ jobs:
         with:
           context: .
           push: true
-          repository: ${{ secrets.DOCKER_USERNAME }}/gitopsfc
-          tags: ${{ secrets.DOCKER_USERNAME }}/gitopsfc:${{ github.sha }},${{ secrets.DOCKER_USERNAME }}/gitopsfc:latest
+          repository: ${{ secrets.DOCKER_USERNAME }}/med-record
+          tags: ${{ secrets.DOCKER_USERNAME }}/med-record:${{ github.sha }},${{ secrets.DOCKER_USERNAME }}/med-record:latest
 
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
@@ -52,12 +52,12 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           cd k8s
-          kustomize edit set image $DOCKER_USERNAME/gitopsfc=$DOCKER_USERNAME/gitopsfc:${{ github.sha }}
+          kustomize edit set image $DOCKER_USERNAME/med-record=$DOCKER_USERNAME/med-record:${{ github.sha }}
       - name: Commit
         run: |
           git config --global user.email "action@github.com"
           git config --local user.name "GitHub Action"	
-          git commit -am "Update image to $DOCKER_USERNAME/gitopsfc:${{ github.sha }}"
+          git commit -am "Update image to $DOCKER_USERNAME/med-record:${{ github.sha }}"
       - name: Push
         uses: ad-m/github-push-action@master
         with:
