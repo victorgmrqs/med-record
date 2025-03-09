@@ -37,13 +37,12 @@ describe('Get Doctor by ID Suite test - Integration', () => {
   it('should return a doctor by ID', async () => {
     const doctorCreate = mockInputDoctorData;
 
-    await fastify.inject({ method: 'POST', url: '/', payload: doctorCreate });
+    const createDoctor = await fastify.inject({ method: 'POST', url: '/', payload: doctorCreate });
+    const createdID = createDoctor.json().id;
     const response = await fastify.inject({
       method: 'GET',
-      url: '/1',
+      url: `/${createdID}`,
     });
-
-    const createdID = response.json().id;
 
     expect(response.statusCode).toBe(200);
     expect(response.json()).toEqual({ id: createdID, ...doctorCreate });

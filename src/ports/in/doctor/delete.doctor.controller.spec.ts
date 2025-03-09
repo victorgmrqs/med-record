@@ -50,14 +50,14 @@ describe('Delete Doctor - Integration Test', () => {
 
     const deleteResponse = await fastify.inject({
       method: 'DELETE',
-      url: createdId,
+      url: `/${createdId}`,
     });
 
     expect(deleteResponse.statusCode).toBe(204);
 
     const getDoctorResponse = await fastify.inject({
       method: 'GET',
-      url: createdId,
+      url: `/${createdId}`,
     });
 
     expect(getDoctorResponse.statusCode).toBe(404);
