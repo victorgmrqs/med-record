@@ -12,6 +12,9 @@
     "test:watch": "NODE_ENV=test vitest",
     "test:coverage": "NODE_ENV=test vitest run --coverage"
   },
+  "prisma": {
+    "seed": "tsx src/tests/seed.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/victorgmrqs/med-record.git"
