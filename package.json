@@ -8,11 +8,11 @@
     "start": "node ./build/app.cjs",
     "dev": "tsx watch src/app.ts",
     "lint": "eslint --ext .ts src",
-    "test": "NODE_ENV=test vitest run",
+    "test": "NODE_ENV=test APP_PORT=3000 vitest run",
     "test:watch": "NODE_ENV=test vitest",
     "test:coverage": "NODE_ENV=test vitest run --coverage"
   },
-  "prisma": {
+   "prisma": {
     "seed": "tsx src/tests/seed.js"
   },
   "repository": {
