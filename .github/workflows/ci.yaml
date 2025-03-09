@@ -4,10 +4,11 @@ on:
   pull_request:
     branches:
       - develop
-  jobs:
-    - check-application:
-      runs-on: ubuntu-latest
-      services:
+
+jobs:
+  check-application:
+    runs-on: ubuntu-latest
+    services:
       mysql:
         image: mysql:8.0.30-debian
         env:
@@ -21,23 +22,22 @@ on:
           --health-timeout=5s
           --health-retries=3
 
-      steps:
-        - name: Checkout code
-        - uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-        - name: Setup Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: '22.14.0'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
 
-        - name: Install dependencies
-          run: npm install
+      - name: Install dependencies
+        run: npm install
 
-        - name: Run lint
-          run: npm run lint
+      - name: Run lint
+        run: npm run lint
 
-        - name: Run tests
-          env:
+      - name: Run tests
+        env:
           DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
-          run: npm run test
-    
+        run: npm run test
