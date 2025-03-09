@@ -1,6 +1,6 @@
 import '@shared/container';
 import { connectPrisma, prismaPlugin } from 'adapters/database/prisma/client';
-import Fastify from 'fastify';
+import Fastify, { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import logger from 'infra/logger';
 import { ZodError } from 'zod';
 
@@ -26,28 +26,32 @@ fastify.register(cors, {
 
 fastify.register(routes, { prefix: '/api/v1' });
 
-fastify.setErrorHandler((error, request, reply) => {
+fastify.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
   if (error instanceof ZodError) {
     return reply.status(400).send({
       message: 'Validation error',
       issues: error.format(),
     });
   }
+
   if (error instanceof AppError) {
     logger.error({
       code: error.code,
       message: error.message,
       service: error.service,
-      correlator: request.headers.correlator,
-      user_id: request.headers.userRegistration,
     });
 
-    reply.status(error.statusCode).send({
+    return reply.status(error.statusCode).send({
       code: error.code,
       message: error.message,
       service: error.service,
-      correlator: request.headers.correlator,
-      user_id: request.headers.userRegistration,
+    });
+  }
+
+  if (error.validation) {
+    return reply.status(400).send({
+      message: 'Validation error',
+      details: error.validation,
     });
   }
 
