@@ -5,19 +5,12 @@ import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.r
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { PrismaClient } from '@prisma/client';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('Delete Doctor - Integration Test', () => {
   const fastify = Fastify();
-  const prisma = new PrismaClient();
 
   beforeAll(async () => {
-    if (container.isRegistered('PrismaDoctorRepository')) {
-      container.clearInstances();
-    }
-
     container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
 
     fastify.register(prismaPlugin);
@@ -26,18 +19,10 @@ describe('Delete Doctor - Integration Test', () => {
   });
 
   afterAll(async () => {
-    await prisma.doctor.deleteMany();
     await fastify.close();
-    await prisma.$disconnect();
-  });
-
-  beforeEach(async () => {
-    await prisma.doctor.deleteMany();
-    await prisma.$executeRaw`ALTER TABLE Doctor AUTO_INCREMENT = 1;`;
   });
 
   it('deve excluir um médico existente', async () => {
-    // Criar um médico para teste
     const createResponse = await fastify.inject({
       method: 'POST',
       url: '/',

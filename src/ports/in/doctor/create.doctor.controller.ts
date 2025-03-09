@@ -17,7 +17,7 @@ export class CreateDoctorController {
     try {
       const bodySchema = z.object({
         name: z.string(),
-        email: z.string().email(),
+        email: z.string().email('Invalid email format'),
       });
       const doctor = bodySchema.parse(request.body);
       const createDoctorUseCase = container.resolve(CreateDoctorUseCase);

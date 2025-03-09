@@ -29,23 +29,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.14.0'
+          node-version: "22.14.0"
 
       - name: Install dependencies
         run: npm install
 
       - name: Generate Prisma Client
         run: npx prisma generate
-      
+
       - name: Migrate Database
         env:
           DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
         run: npx prisma migrate deploy
-        
-      - name: Seed Database
-        env:
-          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
-        run: npx prisma db seed
+
+      # - name: Seed Database
+      #   env:
+      #     DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
+      #   run: npx prisma db seed
 
       - name: Run lint
         run: npm run lint

@@ -5,18 +5,13 @@ import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.r
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { PrismaClient } from '@prisma/client';
 import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
 describe('Get Doctor by ID Suite test - Integration', () => {
   const fastify = Fastify();
-  const prisma = new PrismaClient();
   beforeAll(async () => {
-    if (container.isRegistered('PrismaDoctorRepository')) {
-      container.clearInstances();
-    }
     container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
@@ -24,14 +19,7 @@ describe('Get Doctor by ID Suite test - Integration', () => {
   });
 
   afterAll(async () => {
-    await prisma.doctor.deleteMany();
     await fastify.close();
-    await prisma.$disconnect();
-  });
-
-  beforeEach(async () => {
-    await prisma.doctor.deleteMany();
-    await prisma.$executeRaw`ALTER TABLE Doctor AUTO_INCREMENT = 1;`;
   });
 
   it('should return a doctor by ID', async () => {
