@@ -8,11 +8,11 @@ import AppError from '@shared/errors/AppError';
 @injectable()
 export class DeleteDoctorUseCase {
   constructor(
-    @inject('PrismaDoctorRepository')
+    @inject('DoctorRepository')
     private doctorRepository: IDoctorRepository,
   ) {}
 
-  async execute(doctorId: number): Promise<boolean> {
+  async execute(doctorId: number): Promise<void> {
     const existingDoctor = await this.doctorRepository.findById(doctorId);
 
     if (!existingDoctor) {
@@ -25,7 +25,5 @@ export class DeleteDoctorUseCase {
     }
 
     await this.doctorRepository.delete(doctorId);
-
-    // return true;
   }
 }

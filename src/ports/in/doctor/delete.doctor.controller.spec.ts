@@ -11,7 +11,7 @@ describe('Delete Doctor - Integration Test', () => {
   const fastify = Fastify();
 
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
 
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
@@ -22,7 +22,7 @@ describe('Delete Doctor - Integration Test', () => {
     await fastify.close();
   });
 
-  it('deve excluir um médico existente', async () => {
+  it('should create a doctor and get all doctors', async () => {
     const createResponse = await fastify.inject({
       method: 'POST',
       url: '/',
@@ -48,7 +48,7 @@ describe('Delete Doctor - Integration Test', () => {
     expect(getDoctorResponse.statusCode).toBe(404);
   });
 
-  it('deve retornar 404 ao tentar excluir médico inexistente', async () => {
+  it('should return an empty array when no doctors are present', async () => {
     const response = await fastify.inject({
       method: 'DELETE',
       url: '/9999',

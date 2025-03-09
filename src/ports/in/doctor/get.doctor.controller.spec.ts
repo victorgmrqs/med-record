@@ -12,7 +12,7 @@ import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 describe('Get Doctor by ID Suite test - Integration', () => {
   const fastify = Fastify();
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
@@ -46,7 +46,7 @@ describe('Get Doctor by ID Suite test - Integration', () => {
     expect(response.json()).toEqual({
       statusCode: 404,
       code: 'DOCTOR_NOT_FOUND_ERROR',
-      message: 'No doctor found with the given id: 1',
+      message: 'No Doctor found with the given id: 1',
       service: 'GetDoctorController',
     });
   });

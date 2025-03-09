@@ -7,7 +7,7 @@ import AppError from '@shared/errors/AppError';
 
 @injectable()
 export class CreateDoctorUseCase {
-  constructor(@inject('PrismaDoctorRepository') private doctorRepository: IDoctorRepository) {}
+  constructor(@inject('DoctorRepository') private doctorRepository: IDoctorRepository) {}
 
   async execute(doctor: IDoctorDTO): Promise<number> {
     const doctorExists = await this.doctorRepository.findByEmail(doctor.email);

@@ -7,11 +7,13 @@ import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { mockInputDoctorData, mockInputDoctorDataToUpdate, mockUpdatedDoctor } from '@tests/mocks/doctor.mock';
+
 describe('Update Doctor - Integration Test', () => {
   const fastify = Fastify();
 
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
 
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
@@ -22,11 +24,11 @@ describe('Update Doctor - Integration Test', () => {
     await fastify.close();
   });
 
-  it('deve atualizar um doutor existente', async () => {
+  it('should update an existing doctor', async () => {
     const created = await fastify.inject({
       method: 'POST',
       url: '/',
-      payload: { name: 'Old Name', email: 'test@example.com' },
+      payload: mockInputDoctorData,
     });
 
     expect(created.statusCode).toBe(201);
@@ -35,19 +37,19 @@ describe('Update Doctor - Integration Test', () => {
     const response = await fastify.inject({
       method: 'PUT',
       url: `/${createdId}`,
-      payload: { name: 'New Name' },
+      payload: mockInputDoctorDataToUpdate,
     });
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toMatchObject({ id: createdId, name: 'New Name', email: 'test@example.com' });
+    expect(response.json()).toEqual(mockUpdatedDoctor.toResponse());
   });
 
-  it.skip('deve retornar 404 se o doutor não existir', async () => {
+  it('should return 404 if doctor does not exists ', async () => {
     const response = await fastify.inject({
       method: 'PUT',
       url: '/9999',
       payload: { name: 'Não Importa' },
     });
     expect(response.statusCode).toBe(404);
-    expect(response.json().code).toBe('DOCTOR_NOT_FOUND');
+    expect(response.json().code).toBe('DOCTOR_NOT_FOUND_ERROR');
   });
 });

@@ -12,7 +12,7 @@ import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 describe('Create Doctor | Integration Test Suite', () => {
   const fastify = Fastify();
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
@@ -22,7 +22,7 @@ describe('Create Doctor | Integration Test Suite', () => {
     await fastify.close();
   });
 
-  it.skip('should create a doctor', async () => {
+  it('should create a doctor', async () => {
     const doctorCreate = mockInputDoctorData;
     const response = await fastify.inject({
       method: 'POST',

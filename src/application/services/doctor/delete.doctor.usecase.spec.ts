@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import AppError from '@shared/errors/AppError';
-import { mockDoctorRepository } from '@tests/mocks/doctor.mock';
+import { mockCreatedDoctor, mockDoctorRepository } from '@tests/mocks/doctor.mock';
 
 import { DeleteDoctorUseCase } from './delete.doctor.usecase';
 
@@ -14,7 +14,7 @@ describe('DeleteDoctorUseCase', () => {
   });
 
   it('should delete a doctor when found', async () => {
-    vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValue(1);
+    vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValue(mockCreatedDoctor);
 
     await useCase.execute(1);
 

@@ -7,13 +7,11 @@ import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { prisma } from '@tests/helpers/setup';
-
 describe('Get all doctors Suite test - Integration', () => {
   const fastify = Fastify();
 
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
