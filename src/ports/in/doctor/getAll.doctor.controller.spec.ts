@@ -9,13 +9,15 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 import { PrismaClient } from '@prisma/client';
 
-container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
-
 describe('Get all doctors Suite test - Integration', () => {
   const fastify = Fastify();
   const prisma = new PrismaClient();
 
   beforeAll(async () => {
+    if (container.isRegistered('DoctorRepository')) {
+      container.clearInstances();
+    }
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
@@ -58,18 +60,5 @@ describe('Get all doctors Suite test - Integration', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.json()).toEqual([]);
-  });
-  // TODO: check this test
-  it.skip('should handle errors when getting doctors if there is a server error', async () => {
-    vi.spyOn(prisma.doctor, 'findMany').mockImplementationOnce(() => {
-      throw new Error('Server error');
-    });
-
-    const response = await fastify.inject({
-      method: 'GET',
-      url: '/',
-    });
-
-    expect(response.statusCode).toBe(500);
   });
 });

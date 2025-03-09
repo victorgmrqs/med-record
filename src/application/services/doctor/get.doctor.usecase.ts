@@ -1,13 +1,12 @@
 import 'reflect-metadata';
 import { DoctorResponseDTO } from 'application/dto/doctor.dto';
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
-import { Doctor } from 'domain/entities/doctor';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export class GetDoctorUseCase {
   constructor(
-    @inject('PrismaDoctorRepository')
+    @inject('DoctorRepository')
     private doctorRepository: IDoctorRepository,
   ) {}
 
@@ -17,11 +16,7 @@ export class GetDoctorUseCase {
     if (!doctor) {
       return null;
     }
-    const formattedDoctor: DoctorResponseDTO = {
-      id: doctor.id,
-      name: doctor.name,
-      email: doctor.email,
-    };
-    return formattedDoctor;
+
+    return doctor.toResponse();
   }
 }

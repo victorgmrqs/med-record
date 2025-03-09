@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { mockDoctorRepository } from '@tests/mocks/doctor.mock';
+import { mockCreatedDoctor, mockDoctorRepository } from '@tests/mocks/doctor.mock';
 
 import { GetDoctorUseCase } from './get.doctor.usecase';
 
@@ -14,19 +14,12 @@ describe('Get Doctor Use Case - Suite test -', () => {
   });
 
   it('should get a doctor by id successfully', async () => {
-    // Mock data
-    const mockDoctor = {
-      id: 1,
-      name: 'Dr. João Silva',
-      email: 'email@email.com',
-    };
-
-    vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValue(mockDoctor);
+    vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValue(mockCreatedDoctor);
 
     const doctor = await getDoctorUseCase.execute(1);
 
     expect(mockDoctorRepository.findById).toHaveBeenCalledWith(1);
-    expect(doctor).toEqual(mockDoctor);
+    expect(doctor).toEqual(mockCreatedDoctor.toResponse());
   });
 
   it('Should return null when doctor does not exist', async () => {

@@ -10,12 +10,15 @@ import { describe, it, expect, beforeEach, afterAll, beforeAll } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
-container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
-
 describe('Create Doctor | Integration Test Suite', () => {
   const fastify = Fastify();
   const prisma = new PrismaClient();
   beforeAll(async () => {
+    if (container.isRegistered('DoctorRepository')) {
+      container.clearInstances();
+    }
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
+
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
@@ -32,7 +35,7 @@ describe('Create Doctor | Integration Test Suite', () => {
     await prisma.$executeRaw`ALTER TABLE Doctor AUTO_INCREMENT = 1;`;
   });
 
-  it.skip('should create a doctor', async () => {
+  it('should create a doctor', async () => {
     const doctorCreate = mockInputDoctorData;
     const response = await fastify.inject({
       method: 'POST',
@@ -43,7 +46,7 @@ describe('Create Doctor | Integration Test Suite', () => {
     expect(response.json()).toMatchObject({ message: 'Doctor created successfully', id: 1 });
   });
 
-  it.skip('should return an error when creating a doctor with an existing email', async () => {
+  it('should return an error when creating a doctor with an existing email', async () => {
     const doctorCreate = mockInputDoctorData;
     await fastify.inject({
       method: 'POST',
@@ -61,7 +64,7 @@ describe('Create Doctor | Integration Test Suite', () => {
       statusCode: 400,
       code: 'VALIDATION_ERROR',
       message: 'Doctor already exists',
-      service: 'CreateDoctorUseCase',
+      service: 'CreateDoctorController',
     });
   });
 

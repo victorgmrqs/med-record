@@ -10,12 +10,14 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
-container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
-
 describe('Get Doctor by ID Suite test - Integration', () => {
   const fastify = Fastify();
   const prisma = new PrismaClient();
   beforeAll(async () => {
+    if (container.isRegistered('DoctorRepository')) {
+      container.clearInstances();
+    }
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
@@ -33,16 +35,14 @@ describe('Get Doctor by ID Suite test - Integration', () => {
   });
 
   it('should return a doctor by ID', async () => {
-    const doctorCreate = mockInputDoctorData;
-
-    await fastify.inject({ method: 'POST', url: '/', payload: doctorCreate });
+    await fastify.inject({ method: 'POST', url: '/', payload: mockInputDoctorData });
     const response = await fastify.inject({
       method: 'GET',
       url: '/1',
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ id: 1, ...doctorCreate });
+    expect(response.json()).toEqual({ id: 1, ...mockInputDoctorData });
   });
 
   it('should return 404 when doctor is not found', async () => {

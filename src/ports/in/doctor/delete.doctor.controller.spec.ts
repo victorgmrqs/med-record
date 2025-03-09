@@ -8,17 +8,18 @@ import { container } from 'tsyringe';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { PrismaClient } from '@prisma/client';
+import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
 describe('Delete Doctor - Integration Test', () => {
   const fastify = Fastify();
   const prisma = new PrismaClient();
 
   beforeAll(async () => {
-    if (container.isRegistered('PrismaDoctorRepository')) {
+    if (container.isRegistered('DoctorRepository')) {
       container.clearInstances();
     }
 
-    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
 
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
@@ -37,11 +38,10 @@ describe('Delete Doctor - Integration Test', () => {
   });
 
   it('deve excluir um médico existente', async () => {
-    // Criar um médico para teste
     const createResponse = await fastify.inject({
       method: 'POST',
       url: '/',
-      payload: { name: 'Doctor To Delete', email: 'delete@example.com' },
+      payload: mockInputDoctorData,
     });
 
     expect(createResponse.statusCode).toBe(201);
