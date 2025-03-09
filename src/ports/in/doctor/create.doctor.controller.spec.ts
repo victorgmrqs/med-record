@@ -5,18 +5,13 @@ import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.r
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
-import { describe, it, expect, beforeEach, afterAll, beforeAll } from 'vitest';
+import { describe, it, expect, afterAll, beforeAll } from 'vitest';
 
-import { PrismaClient } from '@prisma/client';
 import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
 describe('Create Doctor | Integration Test Suite', () => {
   const fastify = Fastify();
-  const prisma = new PrismaClient();
   beforeAll(async () => {
-    if (container.isRegistered('PrismaDoctorRepository')) {
-      container.clearInstances();
-    }
     container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
@@ -24,14 +19,7 @@ describe('Create Doctor | Integration Test Suite', () => {
   });
 
   afterAll(async () => {
-    await prisma.doctor.deleteMany();
     await fastify.close();
-    await prisma.$disconnect();
-  });
-
-  beforeEach(async () => {
-    await prisma.doctor.deleteMany();
-    await prisma.$executeRaw`ALTER TABLE Doctor AUTO_INCREMENT = 1;`;
   });
 
   it.skip('should create a doctor', async () => {
@@ -41,11 +29,12 @@ describe('Create Doctor | Integration Test Suite', () => {
       url: '/',
       payload: doctorCreate,
     });
+    const createdID = response.json().id;
     expect(response.statusCode).toBe(201);
-    expect(response.json()).toMatchObject({ message: 'Doctor created successfully', id: 1 });
+    expect(response.json()).toMatchObject({ message: 'Doctor created successfully', id: createdID });
   });
 
-  it.skip('should return an error when creating a doctor with an existing email', async () => {
+  it('should return an error when creating a doctor with an existing email', async () => {
     const doctorCreate = mockInputDoctorData;
     await fastify.inject({
       method: 'POST',
@@ -63,7 +52,7 @@ describe('Create Doctor | Integration Test Suite', () => {
       statusCode: 400,
       code: 'VALIDATION_ERROR',
       message: 'Doctor already exists',
-      service: 'CreateDoctorUseCase',
+      service: 'CreateDoctorController',
     });
   });
 
@@ -86,7 +75,7 @@ describe('Create Doctor | Integration Test Suite', () => {
       issues: [
         {
           code: 'invalid_string',
-          message: 'Invalid email',
+          message: 'Invalid email format',
           path: ['email'],
           validation: 'email',
         },

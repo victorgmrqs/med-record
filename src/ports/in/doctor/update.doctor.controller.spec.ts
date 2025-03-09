@@ -5,21 +5,12 @@ import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.r
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { PrismaClient } from '@prisma/client';
-
-container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 describe('Update Doctor - Integration Test', () => {
   const fastify = Fastify();
-  const prisma = new PrismaClient();
 
   beforeAll(async () => {
-    if (container.isRegistered('PrismaDoctorRepository')) {
-      container.clearInstances();
-    }
-
     container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
 
     fastify.register(prismaPlugin);
@@ -28,14 +19,7 @@ describe('Update Doctor - Integration Test', () => {
   });
 
   afterAll(async () => {
-    await prisma.doctor.deleteMany();
     await fastify.close();
-    await prisma.$disconnect();
-  });
-
-  beforeEach(async () => {
-    await prisma.doctor.deleteMany();
-    await prisma.$executeRaw`ALTER TABLE Doctor AUTO_INCREMENT = 1;`;
   });
 
   it('deve atualizar um doutor existente', async () => {
