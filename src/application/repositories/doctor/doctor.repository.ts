@@ -23,9 +23,9 @@ export class PrismaDoctorRepository implements IDoctorRepository {
     return doctors.map((doc) => new Doctor(doc.id, doc.name, doc.email, doc.created_at, doc.updated_at));
   }
 
-  async findByEmail(email: string): Promise<Boolean | null> {
+  async findByEmail(email: string): Promise<Boolean> {
     const doctor = await prisma.doctor.findFirst({ where: { email } });
-    return doctor ? true : null;
+    return doctor ? true : false;
   }
 
   async findById(id: number): Promise<Doctor | null> {

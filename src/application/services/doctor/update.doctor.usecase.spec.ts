@@ -3,7 +3,12 @@ import 'reflect-metadata';
 import { DoctorResponseDTO } from 'application/dto/doctor.dto';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 
-import { mockDoctorRepository } from '@tests/mocks/doctor.mock';
+import {
+  mockCreatedDoctor,
+  mockDoctorRepository,
+  mockInputDoctorDataToUpdate,
+  mockUpdatedDoctor,
+} from '@tests/mocks/doctor.mock';
 
 import { UpdateDoctorUseCase } from './update.doctor.usecase';
 
@@ -16,31 +21,14 @@ describe('UpdateDoctorUseCase', () => {
   });
 
   it('should update doctor successfully', async () => {
-    const existingDoctor: DoctorResponseDTO = {
-      id: 1,
-      name: 'Dr. João Silva',
-      email: 'joao.silva@example.com',
-    };
+    vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValue(mockCreatedDoctor);
+    vi.spyOn(mockDoctorRepository, 'update').mockResolvedValue(mockUpdatedDoctor);
 
-    const updatedDoctor: DoctorResponseDTO = {
-      id: 1,
-      name: 'Dr. João Silva Atualizado',
-      email: 'joao.silva@example.com',
-    };
-
-    const updateData = {
-      id: 1,
-      name: 'Dr. João Silva Atualizado',
-    };
-
-    vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValue(existingDoctor);
-    vi.spyOn(mockDoctorRepository, 'update').mockResolvedValue(updatedDoctor);
-
-    const result = await updateDoctorUseCase.execute(updateData);
+    const result = await updateDoctorUseCase.execute(mockInputDoctorDataToUpdate);
 
     expect(mockDoctorRepository.findById).toHaveBeenCalledWith(1);
-    expect(mockDoctorRepository.update).toHaveBeenCalledWith(updateData);
-    expect(result).toEqual(updatedDoctor);
+    expect(mockDoctorRepository.update).toHaveBeenCalledWith(mockInputDoctorDataToUpdate);
+    expect(result).toEqual(mockUpdatedDoctor.toResponse());
   });
 
   it('should return 404 when doctor does not exist', async () => {

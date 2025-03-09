@@ -15,7 +15,7 @@ describe('CreateDoctorUseCase', () => {
   });
 
   it('should create a doctor successfully', async () => {
-    vi.spyOn(mockDoctorRepository, 'findByEmail').mockResolvedValue(null);
+    vi.spyOn(mockDoctorRepository, 'findByEmail').mockResolvedValue(false);
     vi.spyOn(mockDoctorRepository, 'create').mockResolvedValue(mockCreatedDoctor);
 
     const result = await createDoctorUseCase.execute(mockInputDoctorData);

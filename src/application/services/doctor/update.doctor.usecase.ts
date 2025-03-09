@@ -9,7 +9,7 @@ import AppError from '@shared/errors/AppError';
 @injectable()
 export class UpdateDoctorUseCase {
   constructor(
-    @inject('PrismaDoctorRepository')
+    @inject('DoctorRepository')
     private doctorRepository: IDoctorRepository,
   ) {}
 
@@ -27,6 +27,6 @@ export class UpdateDoctorUseCase {
 
     const updatedDoctor = await this.doctorRepository.update(data);
 
-    return updatedDoctor;
+    return updatedDoctor.toResponse();
   }
 }

@@ -4,4 +4,4 @@ import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.r
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
 import { container } from 'tsyringe';
 
-container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);

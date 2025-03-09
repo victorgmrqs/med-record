@@ -12,7 +12,7 @@ import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 describe('Create Doctor | Integration Test Suite', () => {
   const fastify = Fastify();
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();

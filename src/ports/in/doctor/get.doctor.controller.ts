@@ -9,6 +9,10 @@ import { handleError } from '@shared/errors/error.handler';
 
 export class GetDoctorController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
+    logger.info({
+      message: 'Getting a doctor by ID',
+      service: GetDoctorController.name,
+    });
     const paramsSchema = z.object({
       id: z.coerce.number(),
     });
@@ -17,15 +21,6 @@ export class GetDoctorController {
       const { id } = paramsSchema.parse(request.params);
       const getDoctorUseCase = container.resolve(GetDoctorUseCase);
       const doctor = await getDoctorUseCase.execute(id);
-
-      if (!doctor) {
-        const message = `No doctor found with the given id: ${id}`;
-        logger.error({
-          message: message,
-          service: GetDoctorController.name,
-        });
-        throw new AppError(404, 'DOCTOR_NOT_FOUND_ERROR', message, GetDoctorController.name);
-      }
 
       return reply.code(200).send(doctor);
     } catch (error: any) {
