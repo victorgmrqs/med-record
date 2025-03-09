@@ -50,7 +50,7 @@ describe('Update Doctor - Integration Test', () => {
     const createdId = created.json().id;
     const response = await fastify.inject({
       method: 'PUT',
-      url: createdId,
+      url: `/${createdId}`,
       payload: { name: 'New Name' },
     });
     expect(response.statusCode).toBe(200);
