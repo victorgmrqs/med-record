@@ -41,6 +41,11 @@ jobs:
         env:
           DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
         run: npx prisma migrate deploy
+        
+      - name: Seed Database
+        env:
+          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
+        run: npx prisma db seed --preview-feature
 
       - name: Run lint
         run: npm run lint
