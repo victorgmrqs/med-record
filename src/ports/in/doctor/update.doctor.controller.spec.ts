@@ -16,7 +16,6 @@ describe('Update Doctor - Integration Test', () => {
   const prisma = new PrismaClient();
 
   beforeAll(async () => {
-    // Limpar registros anteriores no container
     if (container.isRegistered('PrismaDoctorRepository')) {
       container.clearInstances();
     }
@@ -47,11 +46,9 @@ describe('Update Doctor - Integration Test', () => {
     });
     expect(created.statusCode).toBe(201);
 
-    await fastify.inject({
-      method: 'POST',
-      url: '/',
-      payload: { name: 'Old Name', email: 'test@email.com' },
-    });
+    // eslint-disable-next-line no-console
+    console.log('POST response:', created.json());
+    expect(created.statusCode).toBeGreaterThanOrEqual(200);
 
     const response = await fastify.inject({
       method: 'PUT',
