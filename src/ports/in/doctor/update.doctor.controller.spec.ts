@@ -43,13 +43,13 @@ describe('Update Doctor - Integration Test', () => {
     expect(response.json()).toEqual(mockUpdatedDoctor.toResponse());
   });
 
-  it.skip('should return 404 if doctor does not exists ', async () => {
+  it('should return 404 if doctor does not exists ', async () => {
     const response = await fastify.inject({
       method: 'PUT',
       url: '/9999',
       payload: { name: 'Não Importa' },
     });
     expect(response.statusCode).toBe(404);
-    expect(response.json().code).toBe('DOCTOR_NOT_FOUND');
+    expect(response.json().code).toBe('DOCTOR_NOT_FOUND_ERROR');
   });
 });

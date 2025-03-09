@@ -22,7 +22,7 @@ describe('Create Doctor | Integration Test Suite', () => {
     await fastify.close();
   });
 
-  it.skip('should create a doctor', async () => {
+  it('should create a doctor', async () => {
     const doctorCreate = mockInputDoctorData;
     const response = await fastify.inject({
       method: 'POST',
