@@ -47,6 +47,12 @@ describe('Update Doctor - Integration Test', () => {
     });
     expect(created.statusCode).toBe(201);
 
+    await fastify.inject({
+      method: 'POST',
+      url: '/',
+      payload: { name: 'Old Name', email: 'test@email.com' },
+    });
+
     const response = await fastify.inject({
       method: 'PUT',
       url: '/1',
