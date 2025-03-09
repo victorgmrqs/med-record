@@ -44,19 +44,17 @@ describe('Update Doctor - Integration Test', () => {
       url: '/',
       payload: { name: 'Old Name', email: 'test@example.com' },
     });
+
     expect(created.statusCode).toBe(201);
 
-    // eslint-disable-next-line no-console
-    console.log('POST response:', created.json());
-    expect(created.statusCode).toBeGreaterThanOrEqual(200);
-
+    const createdId = created.json().id;
     const response = await fastify.inject({
       method: 'PUT',
-      url: '/1',
+      url: createdId,
       payload: { name: 'New Name' },
     });
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toMatchObject({ id: 1, name: 'New Name', email: 'test@example.com' });
+    expect(response.json()).toMatchObject({ id: createdId, name: 'New Name', email: 'test@example.com' });
   });
 
   it.skip('deve retornar 404 se o doutor não existir', async () => {

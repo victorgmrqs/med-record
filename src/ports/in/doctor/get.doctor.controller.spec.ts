@@ -10,12 +10,14 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
-container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
-
 describe('Get Doctor by ID Suite test - Integration', () => {
   const fastify = Fastify();
   const prisma = new PrismaClient();
   beforeAll(async () => {
+    if (container.isRegistered('PrismaDoctorRepository')) {
+      container.clearInstances();
+    }
+    container.registerSingleton<IDoctorRepository>('PrismaDoctorRepository', PrismaDoctorRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
