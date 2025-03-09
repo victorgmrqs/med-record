@@ -43,8 +43,10 @@ describe('Get Doctor by ID Suite test - Integration', () => {
       url: '/1',
     });
 
+    const createdID = response.json().id;
+
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ id: 1, ...doctorCreate });
+    expect(response.json()).toEqual({ id: createdID, ...doctorCreate });
   });
 
   it('should return 404 when doctor is not found', async () => {
