@@ -17,7 +17,7 @@ datasource med_record_db {
 
 enum Sex {
   M
-  Fí
+  F
 }
 
 model Doctor {
@@ -78,7 +78,10 @@ model MedicalRecord {
   doctor_id      Int
   patient_id     Int
   appointment_id Int
-  description    String
+  description    String?
+  diagnosis      String?
+  prescription   String?
+  notes          String?
   created_at     DateTime    @default(now())
   updated_at     DateTime    @updatedAt
   // Relações
