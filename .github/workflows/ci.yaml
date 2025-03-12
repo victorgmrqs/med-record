@@ -8,6 +8,13 @@ on:
 jobs:
   check-application:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
+      JWT_SECRET: "secret"
+      JWT_EXPIRES_IN: "300"
+      JWT_ALGORITHM: "HS256"
+
     services:
       mysql:
         image: mysql:8.0.30-debian
@@ -38,19 +45,10 @@ jobs:
         run: npx prisma generate
 
       - name: Migrate Database
-        env:
-          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
         run: npx prisma migrate deploy
-
-      # - name: Seed Database
-      #   env:
-      #     DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
-      #   run: npx prisma db seed
 
       - name: Run lint
         run: npm run lint
 
       - name: Run tests
-        env:
-          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
         run: npm run test
