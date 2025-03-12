@@ -4,14 +4,17 @@ import { GetMedicalRecordController } from 'ports/in/medicalRecord/get.MedicalRe
 import { GetAllMedicalRecordsController } from 'ports/in/medicalRecord/getAll.medicalRecord.controller';
 import { UpdateMedicalRecordController } from 'ports/in/medicalRecord/update.medicalRecord.controller';
 
+import { AuthMiddleware } from '@middlewares/jwt.middleware';
+
+const authMiddleware = new AuthMiddleware();
 const getAllMedicalRecordsController = new GetAllMedicalRecordsController();
 const createMedicalRecordController = new CreateMedicalRecordController();
 const getMedicalRecordController = new GetMedicalRecordController();
 const updateMedicalRecordController = new UpdateMedicalRecordController();
 
 export async function medicalRecordRoutes(fastify: FastifyInstance) {
-  fastify.get('/', getAllMedicalRecordsController.handle);
-  fastify.get('/:id', getMedicalRecordController.handle);
-  fastify.post('/', createMedicalRecordController.handle);
-  fastify.put('/:id', updateMedicalRecordController.handle);
+  fastify.get('/', { onRequest: [authMiddleware.get] }, getAllMedicalRecordsController.handle);
+  fastify.get('/:id', { onRequest: [authMiddleware.get] }, getMedicalRecordController.handle);
+  fastify.post('/', { onRequest: [authMiddleware.get] }, createMedicalRecordController.handle);
+  fastify.put('/:id', { onRequest: [authMiddleware.get] }, updateMedicalRecordController.handle);
 }

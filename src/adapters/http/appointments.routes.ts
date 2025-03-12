@@ -5,6 +5,9 @@ import { GetAppointmentController } from 'ports/in/appointment/get.appointments.
 import { GetAllAppointmentsController } from 'ports/in/appointment/getAll.appointments.controller';
 import { UpdateAppointmentController } from 'ports/in/appointment/update.appointments.controller';
 
+import { AuthMiddleware } from '@middlewares/jwt.middleware';
+
+const authMiddleware = new AuthMiddleware();
 const getAllAppointmentsController = new GetAllAppointmentsController();
 const createAppointmentController = new CreateAppointmentController();
 const getAppointmentByIdController = new GetAppointmentController();
@@ -12,9 +15,9 @@ const deleteAppointmentController = new DeleteAppointmentController();
 const updateAppointmentController = new UpdateAppointmentController();
 
 export async function appointmentsRoutes(fastify: FastifyInstance) {
-  fastify.get('/', getAllAppointmentsController.handle);
-  fastify.post('/', createAppointmentController.handle);
-  fastify.get('/:id', getAppointmentByIdController.handle);
-  fastify.put('/:id', updateAppointmentController.handle);
-  fastify.delete('/:id', deleteAppointmentController.handle);
+  fastify.get('/', { onRequest: [authMiddleware.get] }, getAllAppointmentsController.handle);
+  fastify.post('/', { onRequest: [authMiddleware.get] }, createAppointmentController.handle);
+  fastify.get('/:id', { onRequest: [authMiddleware.get] }, getAppointmentByIdController.handle);
+  fastify.put('/:id', { onRequest: [authMiddleware.get] }, updateAppointmentController.handle);
+  fastify.delete('/:id', { onRequest: [authMiddleware.get] }, deleteAppointmentController.handle);
 }

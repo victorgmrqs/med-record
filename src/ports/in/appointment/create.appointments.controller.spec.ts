@@ -2,6 +2,7 @@ import { prismaPlugin } from 'adapters/database/prisma/client';
 import routes from 'adapters/http/index.routes';
 import { PrismaAppointmentRepository } from 'application/repositories/appointment/appointment.repository';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import { PrismaPatientRepository } from 'application/repositories/patient/patient.repository';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
@@ -17,6 +18,7 @@ describe('Create Appointments Suite Test', () => {
   beforeAll(async () => {
     container.registerSingleton('AppointmentRepository', PrismaAppointmentRepository);
     container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     container.registerSingleton('PatientRepository', PrismaPatientRepository);
     fastify.register(prismaPlugin);
     fastify.register(routes);

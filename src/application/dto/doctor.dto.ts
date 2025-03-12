@@ -31,6 +31,7 @@ export const createDoctorRequestSchema = doctorSchema;
 export interface IDoctorDTO {
   name: string;
   email: string;
+  password?: string;
 }
 
 export interface IGetDoctorRequestDTO {
@@ -40,7 +41,6 @@ export interface IGetDoctorRequestDTO {
 export interface IUpdateDoctorRequestDTO {
   id: number;
   name?: string;
-  email?: string;
 }
 
 export type DoctorResponseDTO = {

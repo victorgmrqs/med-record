@@ -3,6 +3,7 @@ import { prismaPlugin } from 'adapters/database/prisma/client';
 import routes from 'adapters/http/index.routes';
 import { PrismaAppointmentRepository } from 'application/repositories/appointment/appointment.repository';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import { PrismaMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository';
 import { PrismaPatientRepository } from 'application/repositories/patient/patient.repository';
 import Fastify from 'fastify';
@@ -10,7 +11,7 @@ import { container } from 'tsyringe';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 import { mockAppointmentInputRequest } from '@tests/mocks/appointment.mock';
-import { mockCreatedDoctor2, mockInputDoctorData } from '@tests/mocks/doctor.mock';
+import { mockInputDoctorData, mockInputDoctorData2 } from '@tests/mocks/doctor.mock';
 import { mockMedicalRecordInputRequest } from '@tests/mocks/medicalRecord.mock';
 import { mockMalePatientRequest } from '@tests/mocks/patient.mock';
 
@@ -20,6 +21,7 @@ describe('Create Medical Record Integration Test Suite', () => {
   beforeAll(async () => {
     container.registerSingleton('MedicalRecordRepository', PrismaMedicalRecordRepository);
     container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     container.registerSingleton('PatientRepository', PrismaPatientRepository);
     container.registerSingleton('AppointmentRepository', PrismaAppointmentRepository);
 
@@ -115,7 +117,7 @@ describe('Create Medical Record Integration Test Suite', () => {
     const doctorResponse = await fastify.inject({
       method: 'POST',
       url: '/doctors',
-      payload: { name: 'Dr. Existente', email: 'existente@doc.com' },
+      payload: mockInputDoctorData,
     });
     const doctorId = doctorResponse.json().id;
 
@@ -180,7 +182,7 @@ describe('Create Medical Record Integration Test Suite', () => {
     const doctorResponse2 = await fastify.inject({
       method: 'POST',
       url: '/doctors',
-      payload: mockCreatedDoctor2,
+      payload: mockInputDoctorData2,
     });
     const patientResponse = await fastify.inject({
       method: 'POST',

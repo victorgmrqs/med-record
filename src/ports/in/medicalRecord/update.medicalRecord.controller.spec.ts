@@ -3,6 +3,7 @@ import { prismaPlugin } from 'adapters/database/prisma/client';
 import routes from 'adapters/http/index.routes';
 import { PrismaAppointmentRepository } from 'application/repositories/appointment/appointment.repository';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import { PrismaMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository';
 import { PrismaPatientRepository } from 'application/repositories/patient/patient.repository';
 import Fastify from 'fastify';
@@ -10,7 +11,7 @@ import { container } from 'tsyringe';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 import { mockAppointmentInputRequest } from '@tests/mocks/appointment.mock';
-import { mockCreatedDoctor2, mockInputDoctorData } from '@tests/mocks/doctor.mock';
+import { mockCreatedDoctor2, mockInputDoctorData, mockInputDoctorData2 } from '@tests/mocks/doctor.mock';
 import { mockMedicalRecordInputRequest } from '@tests/mocks/medicalRecord.mock';
 import { mockMalePatientRequest } from '@tests/mocks/patient.mock';
 
@@ -20,6 +21,7 @@ describe('Update Medical Record Integration Test Suite', () => {
   beforeAll(async () => {
     container.registerSingleton('MedicalRecordRepository', PrismaMedicalRecordRepository);
     container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     container.registerSingleton('PatientRepository', PrismaPatientRepository);
     container.registerSingleton('AppointmentRepository', PrismaAppointmentRepository);
     fastify.register(prismaPlugin);
@@ -81,13 +83,41 @@ describe('Update Medical Record Integration Test Suite', () => {
   });
 
   it('should return 400 for invalid update payload', async () => {
+    const doctorRes = await fastify.inject({
+      method: 'POST',
+      url: '/doctors',
+      payload: mockInputDoctorData,
+    });
+    const patientRes = await fastify.inject({
+      method: 'POST',
+      url: '/patients',
+      payload: mockMalePatientRequest,
+    });
+    const doctorId = doctorRes.json().id;
+    const patientId = patientRes.json().id;
+
+    const appointmentRes = await fastify.inject({
+      method: 'POST',
+      url: '/appointments',
+      payload: { ...mockAppointmentInputRequest, doctorId, patientId },
+    });
+    const appointmentId = appointmentRes.json().id;
+
+    const createRes = await fastify.inject({
+      method: 'POST',
+      url: '/medical-records',
+      payload: { ...mockMedicalRecordInputRequest, doctorId, patientId, appointmentId },
+    });
+    const recordId = createRes.json().id;
     const response = await fastify.inject({
       method: 'PUT',
-      url: '/medical-records/1',
-      payload: { id: 'invalid' },
+      url: `/medical-records/${recordId}`,
+      payload: {
+        diagnosis: 1,
+      },
     });
-    expect(response.statusCode).toBe(400);
     const data = response.json();
+    expect(response.statusCode).toBe(400);
     expect(data.message).toMatch(/Validation error/);
   });
 
@@ -232,7 +262,7 @@ describe('Update Medical Record Integration Test Suite', () => {
     const doctorRes2 = await fastify.inject({
       method: 'POST',
       url: '/doctors',
-      payload: mockCreatedDoctor2,
+      payload: mockInputDoctorData2,
     });
     const patientRes = await fastify.inject({
       method: 'POST',

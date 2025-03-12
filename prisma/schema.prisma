@@ -24,6 +24,7 @@ model Doctor {
   id             Int             @id @default(autoincrement())
   name           String          @med_record_db.VarChar(150)
   email          String          @unique @med_record_db.VarChar(50)
+  password       String          @med_record_db.VarChar(255)
   created_at     DateTime        @default(now())
   updated_at     DateTime        @updatedAt
   // Relações

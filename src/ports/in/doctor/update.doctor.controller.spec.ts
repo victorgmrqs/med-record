@@ -3,6 +3,7 @@ import { prismaPlugin } from 'adapters/database/prisma/client';
 import { doctorRoutes } from 'adapters/http/doctor.routes';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -13,8 +14,8 @@ describe('Update Doctor - Integration Test', () => {
   const fastify = Fastify();
 
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
-
+    container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();

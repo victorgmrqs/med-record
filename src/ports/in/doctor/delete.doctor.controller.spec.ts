@@ -3,16 +3,19 @@ import { prismaPlugin } from 'adapters/database/prisma/client';
 import { doctorRoutes } from 'adapters/http/doctor.routes';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
+import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
 describe('Delete Doctor - Integration Test', () => {
   const fastify = Fastify();
 
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
-
+    container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
@@ -26,7 +29,7 @@ describe('Delete Doctor - Integration Test', () => {
     const createResponse = await fastify.inject({
       method: 'POST',
       url: '/',
-      payload: { name: 'Doctor To Delete', email: 'delete@example.com' },
+      payload: mockInputDoctorData,
     });
 
     expect(createResponse.statusCode).toBe(201);

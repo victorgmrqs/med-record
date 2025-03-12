@@ -1,10 +1,21 @@
 import 'reflect-metadata';
 import { container } from 'tsyringe';
-import { beforeAll, afterAll, beforeEach } from 'vitest';
+import { beforeAll, afterAll, beforeEach, vi } from 'vitest';
 
 import { PrismaClient } from '@prisma/client';
 
 import resetDb from './reset-db';
+
+vi.mock('@middlewares/jwt.middleware', () => ({
+  verifyToken: (_req: any, _reply: any, done: () => void) => {
+    done();
+  },
+  AuthMiddleware: class {
+    get(_request: any, _reply: any, done: () => void) {
+      done();
+    }
+  },
+}));
 
 export const prisma = new PrismaClient();
 container.registerInstance(PrismaClient, prisma);
