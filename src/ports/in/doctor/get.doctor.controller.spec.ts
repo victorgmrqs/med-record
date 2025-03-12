@@ -3,16 +3,18 @@ import { prismaPlugin } from 'adapters/database/prisma/client';
 import { doctorRoutes } from 'adapters/http/doctor.routes';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
+import { mockDoctorResponseOjb, mockInputDoctorData } from '@tests/mocks/doctor.mock';
 
 describe('Get Doctor by ID Suite test - Integration', () => {
   const fastify = Fastify();
   beforeAll(async () => {
-    container.registerSingleton<IDoctorRepository>('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     fastify.register(prismaPlugin);
     fastify.register(doctorRoutes);
     await fastify.ready();
@@ -33,7 +35,7 @@ describe('Get Doctor by ID Suite test - Integration', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ id: createdID, ...doctorCreate });
+    expect(response.json()).toEqual({ id: createdID, ...mockDoctorResponseOjb });
   });
 
   it('should return 404 when doctor is not found', async () => {

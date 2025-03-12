@@ -12,7 +12,7 @@
     "test:watch": "NODE_ENV=test vitest",
     "test:coverage": "NODE_ENV=test vitest run --coverage"
   },
-   "prisma": {
+  "prisma": {
     "seed": "tsx src/tests/seed.js"
   },
   "repository": {
@@ -33,9 +33,10 @@
     "@fastify/swagger": "9.4.2",
     "@fastify/swagger-ui": "5.2.2",
     "@prisma/client": "^6.4.1",
-    "axios": "1.8.1",
+    "axios": "^1.8.2",
     "dotenv": "^16.4.7",
     "fastify": "5.2.1",
+    "jsonwebtoken": "^9.0.2",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0",
     "reflect-metadata": "0.2.2",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@redocly/cli": "1.32.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",
     "@vitest/coverage-v8": "3.0.7",

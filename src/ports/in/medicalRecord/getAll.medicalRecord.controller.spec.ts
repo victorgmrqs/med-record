@@ -3,6 +3,7 @@ import { prismaPlugin } from 'adapters/database/prisma/client';
 import routes from 'adapters/http/index.routes';
 import { PrismaAppointmentRepository } from 'application/repositories/appointment/appointment.repository';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import { PrismaMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository';
 import { PrismaPatientRepository } from 'application/repositories/patient/patient.repository';
 import Fastify from 'fastify';
@@ -20,6 +21,7 @@ describe('Get All Medical Records Integration Test Suite', () => {
   beforeAll(async () => {
     container.registerSingleton('MedicalRecordRepository', PrismaMedicalRecordRepository);
     container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     container.registerSingleton('PatientRepository', PrismaPatientRepository);
     container.registerSingleton('AppointmentRepository', PrismaAppointmentRepository);
 

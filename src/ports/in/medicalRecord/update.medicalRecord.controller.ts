@@ -8,20 +8,25 @@ import { handleError } from '@shared/errors/error.handler';
 
 export class UpdateMedicalRecordController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
+    const paramsSchema = z.object({
+      id: z.coerce.number(),
+    });
+
+    const bodySchema = z.object({
+      doctorId: z.number().optional(),
+      patientId: z.number().optional(),
+      appointmentId: z.number().optional(),
+      diagnosis: z.string().min(1).optional(),
+      notes: z.string().min(1).optional(),
+      prescription: z.string().min(1).optional(),
+    });
     try {
-      const bodySchema = z.object({
-        id: z.number(),
-        doctorId: z.number().optional(),
-        patientId: z.number().optional(),
-        appointmentId: z.number().optional(),
-        diagnosis: z.string().min(1).optional(),
-        notes: z.string().min(1).optional(),
-        prescription: z.string().min(1).optional(),
-      });
-      const updateData = bodySchema.parse(request.body);
+      const params = paramsSchema.parse(request.params);
+      const id = params.id;
+      const bodyData = bodySchema.parse(request.body);
 
       const updateUseCase = container.resolve(UpdateMedicalRecordUseCase);
-      const updatedRecord = await updateUseCase.execute(updateData);
+      const updatedRecord = await updateUseCase.execute({ id, ...bodyData });
 
       logger.info({
         message: 'Medical record updated successfully',

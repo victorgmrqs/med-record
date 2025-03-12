@@ -20,7 +20,6 @@ export class UpdateDoctorController {
 
     const bodySchema = z.object({
       name: z.string().optional(),
-      email: z.string().email().optional(),
     });
 
     try {

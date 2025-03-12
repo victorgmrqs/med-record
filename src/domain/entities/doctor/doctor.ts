@@ -7,6 +7,7 @@ export class Doctor {
     public readonly id: number,
     public name: string,
     public email: string,
+    public _password?: string,
     public createdAt?: Date,
     public updatedAt?: Date,
   ) {
@@ -17,6 +18,10 @@ export class Doctor {
 
   private isValidEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  public get password(): string | undefined {
+    return this._password;
   }
 
   public static toArrayResponse(doctors: Doctor[]): DoctorResponseDTO[] {
@@ -35,7 +40,7 @@ export class Doctor {
     };
   }
 
-  public static mapDoctorToRessponse(doctors: Doctor[]): { id: number; name: string; email: string }[] {
+  public static mapDoctorToResponse(doctors: Doctor[]): { id: number; name: string; email: string }[] {
     return doctors.map((doctor) => doctor.toResponse());
   }
 }

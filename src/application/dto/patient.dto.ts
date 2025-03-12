@@ -15,7 +15,7 @@ interface IUpdateDoctorRequest extends IBasePatient {
   id: number;
 }
 
-export interface IUpdatePatientRequest extends Omit<Partial<IBasePatient>, 'email' | 'sex'> {
+interface IUpdatePatientRequest extends Omit<Partial<IBasePatient>, 'email' | 'sex'> {
   id: number;
   name?: string;
   phoneNumber?: string;
