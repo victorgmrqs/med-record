@@ -1,0 +1,12 @@
+200:
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/DoctorsListResponse"
+401:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+500:
+  $ref: "../../components.yaml#/schemas/InternalServerError"

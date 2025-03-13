@@ -1,0 +1,27 @@
+200:
+  description: Médico criado com sucesso
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/CreateDoctorSuccessResponse"
+400:
+  description: Tentativa de criar médico que já existe
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/DoctorAlreadyExistsError"
+
+401:
+  description: "Unauthorized"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+500:
+  description: Internal server error
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"
+        # $ref: "./components.yaml#/schemas/UnauthorizedError"

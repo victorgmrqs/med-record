@@ -1,0 +1,39 @@
+openapi: 3.0.2
+info:
+  title: Med Record | API Documentation
+  description: Documentation for the Med Record API, an example of a medical record system.
+  version: 1.0.0
+servers:
+  - description: Local server
+    url: http://localhost:3001
+  - description: Production server
+    url: https://med-record.com
+
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /api/v1/auth/login:
+    $ref: "./paths/auth/index.yaml"
+  /api/v1/doctors:
+    $ref: "./paths/doctors/index.yaml"
+  /api/v1/doctors/{id}:
+    $ref: "./paths/doctors/id.yaml"
+  /api/v1/patients:
+    $ref: "./paths/patients/index.yaml"
+  /api/v1/patients/{id}:
+    $ref: "./paths/patients/id.yaml"
+  /api/v1/appointments:
+    $ref: "./paths/appointments/index.yaml"
+  /api/v1/appointments/{id}:
+    $ref: "./paths/appointments/id.yaml"
+  /api/v1/medical-records:
+    $ref: "./paths/medical-records/index.yaml"
+  /api/v1/medical-records/{id}:
+    $ref: "./paths/medical-records/id.yaml"

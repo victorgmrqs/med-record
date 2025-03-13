@@ -1,0 +1,6 @@
+200:
+  description: "Array of patients"
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/PatientsListResponse"

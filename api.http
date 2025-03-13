@@ -1,0 +1,195 @@
+### 👉👉👉 VARIABLES 👈👈👈
+@base_url = http://localhost:3001/api/v1
+@doctor_email = "email@email.com"
+@doctor_pass = "1234567"
+@token = ""
+@doctor_id = ""
+@patient_id = ""
+@appointment_id = ""
+@medical_record_id = ""
+
+### 👉👉👉 JWT LOGIN 👈👈👈
+# @name login
+POST {{base_url}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": {{ doctor_email }},
+  "password": {{ doctor_pass }}
+}
+
+### 👉👉👉 SAVE TOKEN 👈👈👈
+@token = {{ login.response.body.token }}
+
+### 👉👉👉 HEALTH CHECK 👈👈👈
+GET {{base_url}}/healthz HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### 👉👉👉 CREATE DOCTOR 👈👈👈
+# @name createDoctor
+POST {{base_url}}/doctors HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Dr. House",
+  "email": {{ doctor_email }},
+  "password": {{ doctor_pass }}
+}
+
+### 👉👉👉 SAVE DOCTOR ID 👈👈👈
+@doctor_id = {{ createDoctor.response.body.id }}
+
+### 👉👉👉 DOCTOR SECTION 👈👈👈
+
+### GET ALL DOCTORS
+GET {{base_url}}/doctors HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### GET DOCTOR BY ID
+GET {{base_url}}/doctors/{{ doctor_id }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### UPDATE DOCTOR BY ID
+PUT {{base_url}}/doctors/{{ doctor_id }} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "name": "Dr. House MD",
+  "email": "emsail@mail.com"
+}
+
+### DELETE DOCTOR BY ID
+DELETE {{base_url}}/doctors/{{ doctor_id }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### 👉👉👉 PATIENT SECTION 👈👈👈
+
+### CREATE PATIENT
+# @name createPatient
+POST {{base_url}}/patients HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "name": "Jane Doe",
+  "email": "jane@eaxample.com",
+  "phoneNumber": "1234567890",
+  "birthDate": "1990-01-01",
+  "sex": "F",
+  "height": 1.5,
+  "weight": 60
+}
+
+### 👉👉👉 SAVE PATIENT ID 👈👈👈
+@patient_id = {{ createPatient.response.body.id }}
+
+### GET ALL PATIENTS
+GET {{base_url}}/patients HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### GET PATIENT BY ID
+GET {{base_url}}/patients/{{ patient_id }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### UPDATE PATIENT BY ID
+PUT {{base_url}}/patients/{{ patient_id }} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "name": "Jane Doe A",
+  "email": "jane@example.com",
+  "phoneNumber": "123456789d",
+  "birthDate": "1990-01-01"
+}
+
+### DELETE PATIENT BY ID
+DELETE {{base_url}}/patients/{{ patient_id }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### 👉👉👉 APPOINTMENT SECTION 👈👈👈
+
+### CREATE APPOINTMENT
+# @name createAppointment
+POST {{base_url}}/appointments HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "doctorId": {{ doctor_id }},
+  "patientId": {{ patient_id }},
+  "appointmentDate": "2021-01-01T10:00:00.000Z"
+}
+
+### 👉👉👉 SAVE APPOINTMENT ID 👈👈👈
+@appointment_id = {{ createAppointment.response.body.id }}
+
+### GET ALL APPOINTMENTS
+GET {{base_url}}/appointments HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### GET APPOINTMENT BY ID
+GET {{base_url}}/appointments/{{ appointment_id }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### UPDATE APPOINTMENT BY ID
+PUT {{base_url}}/appointments/{{ appointment_id }} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "doctorId": {{ doctor_id }},
+  "patientId": {{ patient_id }},
+  "appointmentDate": "2021-02-01T11:00:00.000Z"
+}
+
+### DELETE APPOINTMENT BY ID
+DELETE {{base_url}}/appointments/{{ appointment_id }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### 👉👉👉 MEDICAL RECORD SECTION 👈👈👈
+
+### CREATE MEDICAL RECORD
+# @name createMedicalRecord
+POST {{base_url}}/medical-records HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "doctorId": {{ doctor_id }},
+  "patientId": {{ patient_id }},
+  "appointmentId": {{ appointment_id }},
+  "diagnosis": "Headache",
+  "prescription": "Aspirin",
+  "notes": "Take 1 pill every 4 hours"
+}
+
+### 👉👉👉 SAVE MEDICAL RECORD ID 👈👈👈
+@medical_record_id = {{ createMedicalRecord.response.body.id }}
+
+### GET ALL MEDICAL RECORDS
+GET {{base_url}}/medical-records HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### GET MEDICAL RECORD BY ID
+GET {{base_url}}/medical-records/{{ medical_record_id }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+### UPDATE MEDICAL RECORD BY ID
+PUT {{base_url}}/medical-records/{{ medical_record_id }} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{ token }}
+
+{
+  "doctorId": {{ doctor_id }},
+  "patientId": {{ patient_id }},
+  "appointmentId": {{ appointment_id }},
+  "diagnosis": "Headache",
+  "prescription": "Dipirona",
+  "notes": "Take every 6 hours"
+}
+
+### DELETE MEDICAL RECORD BY ID
+DELETE {{base_url}}/medical-records/{{ medical_record_id }} HTTP/1.1
+Authorization: Bearer {{ token }}

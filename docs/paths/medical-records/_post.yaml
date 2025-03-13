@@ -1,0 +1,33 @@
+201:
+  description: "Medical record created successfully"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: "Medical record created successfully"
+          id:
+            type: number
+            example: 1
+
+400:
+  description: "Patient not found (ou outra falha de validação)"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 400
+          code:
+            type: string
+            example: "VALIDATION_ERROR"
+          message:
+            type: string
+            example: "Patient not found"
+          service:
+            type: string
+            example: "CreateMedicalRecordController"

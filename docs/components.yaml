@@ -1,0 +1,20 @@
+schemas:
+  InternalServerError:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "Internal server error"
+
+  UnauthorizedError:
+    type: object
+    properties:
+      code:
+        type: string
+        example: "UNAUTHORIZED"
+      message:
+        type: string
+        example: "Missing token"
+      service:
+        type: string
+        example: "AuthMiddleware"

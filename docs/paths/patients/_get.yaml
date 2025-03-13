@@ -1,0 +1,26 @@
+200:
+  description: "Patient found"
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/PatientResponse"
+
+404:
+  description: "Patient not found"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 404
+          code:
+            type: string
+            example: "PATIENT_NOT_FOUND_ERROR"
+          message:
+            type: string
+            example: "No patient found with the given id: 3"
+          service:
+            type: string
+            example: "GetPatientController"

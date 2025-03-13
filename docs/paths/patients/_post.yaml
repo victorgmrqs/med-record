@@ -1,0 +1,33 @@
+201:
+  description: "Patient created successfully"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: "Patient created successfully"
+          id:
+            type: number
+            example: 1
+
+400:
+  description: "Patient already exists"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 400
+          code:
+            type: string
+            example: "VALIDATION_ERROR"
+          message:
+            type: string
+            example: "Patient already exists"
+          service:
+            type: string
+            example: "CreatePatientController"

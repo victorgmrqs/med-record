@@ -1,0 +1,89 @@
+get:
+  summary: "Get patient by ID"
+  tags:
+    - Patients
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the patient"
+      schema:
+        type: number
+  responses:
+    $ref: "./_get.yaml"
+    401:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            $ref: "../../components.yaml#/schemas/UnauthorizedError"
+    500:
+      description: "Internal server error"
+      content:
+        application/json:
+          schema:
+            $ref: "../../components.yaml#/schemas/InternalServerError"
+
+put:
+  summary: "Update patient by ID"
+  tags:
+    - Patients
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the patient"
+      schema:
+        type: number
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/UpdatePatientBody"
+  responses:
+    $ref: "./_put.yaml"
+    401:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            $ref: "../../components.yaml#/schemas/UnauthorizedError"
+    500:
+      description: "Internal server error"
+      content:
+        application/json:
+          schema:
+            $ref: "../../components.yaml#/schemas/InternalServerError"
+
+delete:
+  summary: "Delete patient by ID"
+  tags:
+    - Patients
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the patient"
+      schema:
+        type: number
+  responses:
+    $ref: "./_delete.yaml"
+    401:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            $ref: "../../components.yaml#/schemas/UnauthorizedError"
+    500:
+      description: "Internal server error"
+      content:
+        application/json:
+          schema:
+            $ref: "../../components.yaml#/schemas/InternalServerError"
