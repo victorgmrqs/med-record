@@ -1,7 +1,7 @@
 import '@shared/container';
 import { connectPrisma, prismaPlugin } from 'adapters/database/prisma/client';
 import Fastify, { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
-import logger from 'infra/logger';
+import logger from '@infra/logger';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { ZodError } from 'zod';
@@ -16,9 +16,6 @@ import AppError from '@shared/errors/AppError';
 
 import routes from './index.routes';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 const fastify = Fastify({
   logger: true,
 });
@@ -32,7 +29,7 @@ fastify.register(cors, {
 const swaggerOptions: SwaggerOptions = {
   mode: 'static',
   specification: {
-    baseDir: __dirname,
+    baseDir: process.cwd(),
     path: 'src/swagger.json',
     postProcessor: (swaggerObject) => swaggerObject,
   },
