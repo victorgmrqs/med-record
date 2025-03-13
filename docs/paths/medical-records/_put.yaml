@@ -1,0 +1,40 @@
+200:
+  description: "Medical record updated successfully"
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/MedicalRecordResponse"
+
+404:
+  description: "Medical record not found"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 404
+          code:
+            type: string
+            example: "MEDICAL_RECORD_NOT_FOUND"
+          message:
+            type: string
+            example: "No medical record found with the given id: 3"
+          service:
+            type: string
+            example: "UpdateMedicalRecordController"
+
+401:
+  description: "Unauthorized"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+500:
+  description: "Internal server error"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

@@ -1,0 +1,58 @@
+post:
+  summary: "Realiza login de um usuário"
+  description: "Gera um token JWT se as credenciais estiverem corretas."
+  tags:
+    - Auth
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - email
+            - password
+          properties:
+            email:
+              type: string
+              format: email
+              example: "doctor@example.com"
+            password:
+              type: string
+              example: "123456"
+  responses:
+    "200":
+      description: "Login realizado com sucesso"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                example: "JWT-TOKEN-EXAMPLE"
+    "401":
+      description: "Credenciais inválidas"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                example: 401
+              code:
+                type: string
+                example: "UNAUTHORIZED"
+              message:
+                type: string
+                example: "Invalid credentials"
+              service:
+                type: string
+                example: "AuthController"
+    "500":
+      description: "Internal server error"
+      content:
+        application/json:
+          schema:
+            $ref: "../../components.yaml#/schemas/InternalServerError"

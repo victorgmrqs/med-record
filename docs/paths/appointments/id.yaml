@@ -1,0 +1,53 @@
+get:
+  summary: "Get appointment by ID"
+  tags:
+    - Appointments
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the appointment"
+      schema:
+        type: number
+  responses:
+    $ref: "./_get.yaml"
+
+put:
+  summary: "Update appointment"
+  tags:
+    - Appointments
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the appointment"
+      schema:
+        type: number
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/UpdateAppointmentBody"
+  responses:
+    $ref: "./_put.yaml"
+
+delete:
+  summary: "Delete appointment"
+  tags:
+    - Appointments
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the appointment"
+      schema:
+        type: number
+  responses:
+    $ref: "./_delete.yaml"

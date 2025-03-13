@@ -1,0 +1,75 @@
+schemas:
+  CreateMedicalRecordBody:
+    type: object
+    required:
+      - patientId
+      - doctorId
+      - appointmentId
+      - diagnosis
+      - treatment
+      - prescription
+    properties:
+      patientId:
+        type: number
+        example: 1
+      doctorId:
+        type: number
+        example: 1
+      appointmentId:
+        type: number
+        example: 1
+      diagnosis:
+        type: string
+        example: "diagnosis"
+      treatment:
+        type: string
+        example: "treatment"
+      prescription:
+        type: string
+        example: "prescription"
+
+  UpdateMedicalRecordBody:
+    type: object
+    properties:
+      diagnosis:
+        type: string
+        example: "Headache"
+      treatment:
+        type: string
+        example: "Rest and painkillers"
+      prescription:
+        type: string
+        example: "Aspirin"
+      notes:
+        type: string
+        example: "Take 1 pill every 4 hours"
+
+  MedicalRecordResponse:
+    type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      patientId:
+        type: number
+        example: 2
+      doctorId:
+        type: number
+        example: 1
+      appointmentId:
+        type: number
+        example: 1
+      diagnosis:
+        type: string
+        example: "Headache"
+      prescription:
+        type: string
+        example: "Aspirin"
+      notes:
+        type: string
+        example: "Take 1 pill every 4 hours"
+
+  MedicalRecordListResponse:
+    type: array
+    items:
+      $ref: "#/schemas/MedicalRecordResponse"

@@ -1,0 +1,50 @@
+get:
+  summary: "Get doctor by ID"
+  tags:
+    - Doctors
+  operationId: "GetDoctorByIdUseCase"
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the doctor"
+      schema:
+        type: number
+  responses:
+    $ref: "./_get.yaml"
+
+put:
+  summary: "Update doctor by ID"
+  tags:
+    - Doctors
+  operationId: "UpdateDoctorUseCase"
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the doctor"
+      schema:
+        type: number
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/DoctorUpdateRequest"
+  responses:
+    $ref: "./_put.yaml"
+
+delete:
+  summary: "Delete doctor by ID"
+  tags:
+    - Doctors
+  operationId: "DeleteDoctorByIdUseCase"
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the doctor"
+      schema:
+        type: number
+  responses:
+    $ref: "./_delete.yaml"

@@ -1,0 +1,23 @@
+post:
+  summary: "Create a new medical record"
+  tags:
+    - Medical Records
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/CreateMedicalRecordBody"
+  responses:
+    $ref: "./_post.yaml"
+
+get:
+  summary: "Get all medical records"
+  tags:
+    - Medical Records
+  security:
+    - bearerAuth: []
+  responses:
+    $ref: "./_getAll.yaml"

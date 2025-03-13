@@ -10,7 +10,13 @@
     "lint": "eslint --ext .ts src",
     "test": "NODE_ENV=test APP_PORT=3000 vitest run",
     "test:watch": "NODE_ENV=test vitest",
-    "test:coverage": "NODE_ENV=test vitest run --coverage"
+    "test:coverage": "NODE_ENV=test vitest run --coverage",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "docs:generate": "redocly bundle docs/index.yaml --output src/swagger.json",
+    "docs:serve": "redocly preview-docs src/swagger.json",
+    "docs:validate": "redocly lint docs/index.yaml",
+    "docs:build": "redocly bundle docs/index.yaml --output build/swagger.json"
   },
   "prisma": {
     "seed": "tsx src/tests/seed.js"
