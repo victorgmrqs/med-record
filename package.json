@@ -10,7 +10,7 @@
     "lint": "eslint --ext .ts src",
     "test": "NODE_ENV=test APP_PORT=3000 vitest run",
     "test:watch": "NODE_ENV=test vitest",
-    "test:coverage": "NODE_ENV=test npx vitest run --coverage --coverage.reporter=lcov",
+    "test:coverage": "NODE_ENV=test vitest run --coverage",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "docs:generate": "redocly bundle docs/swagger/index.yaml --output src/swagger.json",

@@ -1,5 +1,10 @@
 # Projeto Med Record
 
+[![codecov](https://codecov.io/gh/victorgmrqs/med-record/branch/main/graph/badge.svg)](https://codecov.io/gh/victorgmrqs/med-record)  
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/victorgmrqs/med-record/?ref=repository-badge)
+
+---
+
 O **Med Record** é um sistema de prontuário eletrônico para médicos cadastrarem, atualizarem e gerenciarem pacientes, consultas e registros médicos. Ele utiliza princípios de Clean Architecture, Domain-Driven Design e tecnologias como Node.js, Prisma, Fastify e tsyringe.
 
 ## Sumário
@@ -39,38 +44,39 @@ O projeto está estruturado em camadas:
 
 1. **Clonar o repositório:**
 
-   ```bash
-   git clone https://github.com/seu-usuario/med-record.git
-   cd med-record
-   ```
+```bash
+git clone https://github.com/seu-usuario/med-record.git
+cd med-record
+```
 
 2. **Instalar dependências:**
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
 3. **Configurar variáveis de ambiente:**
 
-   ```
-   DATABASE_URL="mysql://root:root@localhost:3310/med_record_db"
-   NODE_ENV='dev'
-   APP_PORT=3000
-   JWT_SECRET=secret
-   JWT_EXPIRES_IN=3600
-   JWT_ALGORITHM=HS256
-   ```
+```
+DATABASE_URL="mysql://root:root@localhost:3310/med_record_db"
+NODE_ENV='dev'
+APP_PORT=3000
+JWT_SECRET=secret
+JWT_EXPIRES_IN=3600
+JWT_ALGORITHM=HS256
+```
 
 4. **Executar migrações:**
 
-   ```bash
-   npm run prisma:migrate
-   ```
+```bash
+npm run prisma:migrate
+```
 
 5. **Iniciar o servidor:**
-   ```bash
-   npm run dev
-   ```
+
+```bash
+npm run dev
+```
 
 ## Execução do Projeto
 
@@ -92,17 +98,23 @@ docker-compose up
 1. Abra o projeto no VS Code.
 2. Selecione "Reopen in Container".
 3. Rode o servidor com:
-   ```bash
-   npm run dev
-   ```
+
+```bash
+npm run dev
+```
 
 ### Deploy na Cloud
 
 1. Configure variáveis de ambiente no provedor.
 2. Execute em modo de produção:
-   ```bash
-   npm run start
-   ```
+
+```bash
+npm run start
+```
+
+## Kubernetes
+
+Os manifestos do Kubernetes podem ser encontrados no diretório `k8s` do projeto.
 
 ## Documentação da API
 
@@ -118,10 +130,12 @@ Para consultar fluxos como cadastro de médico, paciente, agendamento e registro
 npm run test
 ```
 
+### Cobertura de testes
+
+```bash
+npm run test:coverage
+```
+
 ## Contribuições
 
 Contribuições são bem-vindas por meio de pull requests.
-
-## Licença
-
-Este projeto é distribuído sob a licença MIT.
