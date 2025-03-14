@@ -1,5 +1,5 @@
 import { CreateMedicalRecordRequestDTO, UpdateMedicalRecordRequestDTO } from 'application/dto/medicalRecord.dto';
-import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.respository.interface';
+import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository.interface';
 import { MedicalRecord } from 'domain/entities/medicalRecord/medicalRecord';
 import { vi } from 'vitest';
 
@@ -53,4 +53,4 @@ export const mockMedicalRecordUpdateDBResponse = new MedicalRecord(
   new Date('2025-03-09T10:00:00.000Z'),
 );
 
-export const mockAllMedicalRecordsResponse = MedicalRecord.mapRecordsToResponse([mockMedicalRecordDBResponse]);
+export const mockAllMedicalRecordsResponse = MedicalRecord.toArrayResponse([mockMedicalRecordDBResponse]);

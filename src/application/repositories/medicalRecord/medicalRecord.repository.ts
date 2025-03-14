@@ -2,70 +2,36 @@ import prisma from 'adapters/database/prisma/client';
 import { CreateMedicalRecordRequestDTO, UpdateMedicalRecordRequestDTO } from 'application/dto/medicalRecord.dto';
 import { MedicalRecord } from 'domain/entities/medicalRecord/medicalRecord';
 
-import { IMedicalRecordRepository } from './medicalRecord.respository.interface';
+import { IMedicalRecordRepository } from './medicalRecord.repository.interface';
 
 export class PrismaMedicalRecordRepository implements IMedicalRecordRepository {
   async findAll(): Promise<MedicalRecord[]> {
-    const records = await prisma.medicalRecord.findMany();
-    return records.map(
-      (record) =>
-        new MedicalRecord(
-          record.id,
-          record.doctor_id,
-          record.patient_id,
-          record.appointment_id,
-          record.diagnosis ?? undefined,
-          record.prescription ?? undefined,
-          record.notes ?? undefined,
-          record.created_at,
-          record.updated_at,
-        ),
-    );
+    const records = await prisma.medical_records.findMany();
+    return records.map(MedicalRecord.fromPrisma);
   }
 
   async findById(id: number): Promise<MedicalRecord | null> {
-    const record = await prisma.medicalRecord.findUnique({ where: { id } });
+    const record = await prisma.medical_records.findUnique({ where: { id } });
     if (!record) return null;
-    return new MedicalRecord(
-      record.id,
-      record.doctor_id,
-      record.patient_id,
-      record.appointment_id,
-      record.diagnosis ?? undefined,
-      record.prescription ?? undefined,
-      record.notes ?? undefined,
-      record.created_at,
-      record.updated_at,
-    );
+    return MedicalRecord.fromPrisma(record);
   }
 
   async create(data: CreateMedicalRecordRequestDTO): Promise<MedicalRecord> {
-    const record = await prisma.medicalRecord.create({
+    const record = await prisma.medical_records.create({
       data: {
         doctor_id: data.doctorId,
         patient_id: data.patientId,
         appointment_id: data.appointmentId,
-        description: data.notes,
         diagnosis: data.diagnosis,
         prescription: data.prescription,
         notes: data.notes,
       },
     });
-    return new MedicalRecord(
-      record.id,
-      record.doctor_id,
-      record.patient_id,
-      record.appointment_id,
-      record.diagnosis ?? undefined,
-      record.prescription ?? undefined,
-      record.notes ?? undefined,
-      record.created_at,
-      record.updated_at,
-    );
+    return MedicalRecord.fromPrisma(record);
   }
 
   async update(data: UpdateMedicalRecordRequestDTO): Promise<MedicalRecord> {
-    const record = await prisma.medicalRecord.update({
+    const record = await prisma.medical_records.update({
       where: { id: data.id },
       data: {
         doctor_id: data.doctorId,
@@ -76,16 +42,6 @@ export class PrismaMedicalRecordRepository implements IMedicalRecordRepository {
         notes: data.notes,
       },
     });
-    return new MedicalRecord(
-      record.id,
-      record.doctor_id,
-      record.patient_id,
-      record.appointment_id,
-      record.diagnosis ?? undefined,
-      record.prescription ?? undefined,
-      record.notes ?? undefined,
-      record.created_at,
-      record.updated_at,
-    );
+    return MedicalRecord.fromPrisma(record);
   }
 }

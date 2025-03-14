@@ -1,5 +1,5 @@
 import { MedicalRecordResponseDTO } from 'application/dto/medicalRecord.dto';
-import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.respository.interface';
+import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository.interface';
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';

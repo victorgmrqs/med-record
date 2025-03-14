@@ -7,7 +7,7 @@ import logger from '@infra/logger';
 import { handleError } from '@shared/errors/error.handler';
 
 export class CreateMedicalRecordController {
-  async handle(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+  async handle(request: FastifyRequest, reply: FastifyReply) {
     try {
       const bodySchema = z.object({
         doctorId: z.number(),

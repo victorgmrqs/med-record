@@ -1,4 +1,4 @@
-import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.respository.interface';
+import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository.interface';
 import { GetAllMedicalRecordsUseCase } from 'application/services/medicalRecord/getAllMedicalRecords.usecase';
 import { MedicalRecord } from 'domain/entities/medicalRecord/medicalRecord';
 import { MedicalRecord as MedicalRecordEntity } from 'domain/entities/medicalRecord/medicalRecord';
@@ -53,7 +53,7 @@ describe('GetAllMedicalRecordsUseCase', () => {
 
     const result = await getAllMedicalRecordsUseCase.execute();
 
-    const expected = MedicalRecord.mapRecordsToResponse([recordInstance]);
+    const expected = MedicalRecord.toArrayResponse([recordInstance]);
 
     expect(mockMedicalRecordRepository.findAll).toHaveBeenCalled();
     expect(result).toEqual(expected);

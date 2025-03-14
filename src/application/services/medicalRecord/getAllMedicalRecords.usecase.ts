@@ -1,4 +1,4 @@
-import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.respository.interface';
+import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository.interface';
 import { MedicalRecord } from 'domain/entities/medicalRecord/medicalRecord';
 import { injectable, inject } from 'tsyringe';
 
@@ -21,6 +21,6 @@ export class GetAllMedicalRecordsUseCase {
     }[]
   > {
     const records = await this.medicalRecordRepository.findAll();
-    return MedicalRecord.mapRecordsToResponse(records);
+    return MedicalRecord.toArrayResponse(records);
   }
 }
