@@ -13,10 +13,10 @@
     "test:coverage": "NODE_ENV=test vitest run --coverage --coverage.reporter=lcov",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
-    "docs:generate": "redocly bundle docs/index.yaml --output src/swagger.json",
+    "docs:generate": "redocly bundle docs/swagger/index.yaml --output src/swagger.json",
     "docs:serve": "redocly preview-docs src/swagger.json",
-    "docs:validate": "redocly lint docs/index.yaml",
-    "docs:build": "redocly bundle docs/index.yaml --output build/swagger.json"
+    "docs:validate": "redocly lint docs/swagger/index.yaml",
+    "docs:build": "redocly bundle docs/swagger/index.yaml --output build/swagger.json"
   },
   "repository": {
     "type": "git",
