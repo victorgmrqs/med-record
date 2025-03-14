@@ -79,10 +79,6 @@ schemas:
       name:
         type: string
         example: "Dr. House MD"
-      email:
-        type: string
-        format: email
-        example: "emsail@mail.com"
 
   DoctorNotFound:
     type: object
@@ -95,7 +91,7 @@ schemas:
         example: "DOCTOR_NOT_FOUND_ERROR"
       message:
         type: string
-        example: "No doctor found with the given id: 1"
+        example: "Doctor not found"
       service:
         type: string
         example: "DoctorController"

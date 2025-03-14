@@ -23,12 +23,7 @@ export class UpdateMedicalRecordUseCase {
   async execute(data: UpdateMedicalRecordRequestDTO) {
     const existingRecord = await this.medicalRecordRepository.findById(data.id);
     if (!existingRecord) {
-      throw new AppError(
-        404,
-        'MEDICAL_RECORD_NOT_FOUND',
-        `No medical record found with the given id: ${data.id}`,
-        UpdateMedicalRecordUseCase.name,
-      );
+      throw new AppError(404, 'MEDICAL_RECORD_NOT_FOUND', 'No medical record found', UpdateMedicalRecordUseCase.name);
     }
 
     if (data.doctorId && data.doctorId !== existingRecord.doctorId) {

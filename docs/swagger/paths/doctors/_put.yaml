@@ -18,4 +18,3 @@
     application/json:
       schema:
         $ref: "../../components.yaml#/schemas/InternalServerError"
-        # $ref: "./components.yaml#/schemas/UnauthorizedError"

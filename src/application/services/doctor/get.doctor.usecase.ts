@@ -17,7 +17,7 @@ export class GetDoctorUseCase {
     const doctor = await this.doctorRepository.findById(doctorId);
 
     if (!doctor) {
-      const message = `No Doctor found with the given id: ${doctorId}`;
+      const message = 'Doctor not found';
       logger.error({
         message: message,
         service: GetDoctorUseCase.name,

@@ -2,8 +2,6 @@ post:
   summary: "Create a new patient"
   tags:
     - Patients
-  security:
-    - bearerAuth: []
   requestBody:
     required: true
     content:
@@ -11,13 +9,12 @@ post:
         schema:
           $ref: "./components.yaml#/schemas/CreatePatientBody"
   responses:
-    $ref: "./_post.yaml" # arquivo que contém os status codes de resposta (201, 400, etc.)
+    $ref: "./_post.yaml"
 
 get:
   summary: "Get all patients"
   tags:
     - Patients
-  security:
-    - bearerAuth: []
+  operationId: "GetAllPatientsUseCase"
   responses:
     $ref: "./_getAll.yaml"

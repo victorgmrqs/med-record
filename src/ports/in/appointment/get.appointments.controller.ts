@@ -19,7 +19,7 @@ export class GetAppointmentController {
       const appointment = await getAppointmentByIdUseCase.execute(id);
 
       if (!appointment) {
-        const message = `No appointment found with the given id: ${id}`;
+        const message = 'Appointment not found';
         logger.error({ message, service: GetAppointmentController.name });
         throw new AppError(404, 'APPOINTMENT_NOT_FOUND', message, GetAppointmentController.name);
       }

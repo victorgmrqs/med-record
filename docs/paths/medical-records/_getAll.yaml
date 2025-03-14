@@ -1,6 +1,0 @@
-200:
-  description: "Array of medical records"
-  content:
-    application/json:
-      schema:
-        $ref: "./components.yaml#/schemas/MedicalRecordListResponse"

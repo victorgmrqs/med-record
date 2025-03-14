@@ -4,6 +4,11 @@
     application/json:
       schema:
         $ref: "./components.yaml#/schemas/MedicalRecordResponse"
+401:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
 
 404:
   description: "Medical record not found"
@@ -24,3 +29,9 @@
           service:
             type: string
             example: "GetMedicalRecordController"
+
+500:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

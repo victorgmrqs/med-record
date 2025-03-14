@@ -11,7 +11,6 @@
           id:
             type: number
             example: 1
-
 400:
   description: "Patient already exists"
   content:
@@ -31,3 +30,14 @@
           service:
             type: string
             example: "CreatePatientController"
+401:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+500:
+  description: Internal server error
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

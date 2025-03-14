@@ -6,7 +6,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const mockMedicalRecordRepository: IMedicalRecordRepository = {
   create: vi.fn(),
-  delete: vi.fn(),
   findAll: vi.fn(),
   findById: vi.fn(),
   update: vi.fn(),
@@ -46,8 +45,8 @@ describe('GetAllMedicalRecordsUseCase', () => {
       recordData.patientId,
       recordData.appointmentId,
       recordData.description,
-      recordData.createdAt,
-      recordData.updatedAt,
+      recordData.createdAt.toISOString(),
+      recordData.updatedAt.toDateString(),
     );
     vi.spyOn(mockMedicalRecordRepository, 'findAll').mockResolvedValue([recordInstance]);
 

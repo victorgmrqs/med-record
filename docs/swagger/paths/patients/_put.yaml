@@ -4,7 +4,11 @@
     application/json:
       schema:
         $ref: "./components.yaml#/schemas/PatientResponse"
-
+401:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
 404:
   description: "Patient not found"
   content:
@@ -24,3 +28,9 @@
           service:
             type: string
             example: "GetPatientController"
+500:
+  description: Internal server error
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

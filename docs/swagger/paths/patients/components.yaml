@@ -9,6 +9,7 @@ schemas:
       - sex
       - height
       - weight
+      - doctorId
     properties:
       name:
         type: string
@@ -33,6 +34,9 @@ schemas:
       weight:
         type: number
         example: 60
+      doctorId:
+        type: number
+        example: 1
 
   UpdatePatientBody:
     type: object
@@ -40,10 +44,6 @@ schemas:
       name:
         type: string
         example: "Jane Doe A"
-      email:
-        type: string
-        format: email
-        example: "jane@example.com"
       phoneNumber:
         type: string
         example: "1234567898"
@@ -51,9 +51,6 @@ schemas:
         type: string
         format: date
         example: "1990-01-01"
-      sex:
-        type: string
-        example: "F"
       height:
         type: number
         example: 1.5
@@ -90,6 +87,9 @@ schemas:
       weight:
         type: number
         example: 60
+      doctorId:
+        type: number
+        example: 1
 
   PatientsListResponse:
     type: array

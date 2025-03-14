@@ -26,7 +26,7 @@ describe('DeleteDoctorUseCase', () => {
     vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValue(null);
 
     await expect(useCase.execute(1)).rejects.toStrictEqual(
-      new AppError(404, 'DOCTOR_NOT_FOUND_ERROR', 'No Doctor found with the given id: 1', 'DeleteDoctorUseCase'),
+      new AppError(404, 'DOCTOR_NOT_FOUND_ERROR', 'Doctor not found', 'DeleteDoctorUseCase'),
     );
   });
 });

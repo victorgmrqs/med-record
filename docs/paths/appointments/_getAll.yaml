@@ -1,6 +1,0 @@
-200:
-  description: "Array of appointments"
-  content:
-    application/json:
-      schema:
-        $ref: "./components.yaml#/schemas/AppointmentsListResponse"
