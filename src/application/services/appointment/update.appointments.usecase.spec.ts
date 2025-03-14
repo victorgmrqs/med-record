@@ -13,11 +13,7 @@ describe('UpdateAppointmentUseCase', () => {
   let updateAppointmentUseCase: UpdateAppointmentUseCase;
 
   beforeEach(() => {
-    updateAppointmentUseCase = new UpdateAppointmentUseCase(
-      mockAppointmentRepository,
-      // mockDoctorRepository,
-      // mockPatientRepository,
-    );
+    updateAppointmentUseCase = new UpdateAppointmentUseCase(mockAppointmentRepository);
     vi.clearAllMocks();
   });
 

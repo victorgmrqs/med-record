@@ -16,7 +16,7 @@ export class DeleteDoctorUseCase {
     const existingDoctor = await this.doctorRepository.findById(doctorId);
 
     if (!existingDoctor) {
-      const message = `No Doctor found with the given id: ${doctorId}`;
+      const message = 'Doctor not found';
       logger.error({
         message: message,
         service: DeleteDoctorUseCase.name,

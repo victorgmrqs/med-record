@@ -28,7 +28,7 @@ describe('Get Doctor Use Case - Suite test -', () => {
     await expect(getDoctorUseCase.execute(1)).rejects.toMatchObject({
       statusCode: 404,
       code: 'DOCTOR_NOT_FOUND_ERROR',
-      message: 'No Doctor found with the given id: 1',
+      message: 'Doctor not found',
       service: 'GetDoctorUseCase',
     });
   });

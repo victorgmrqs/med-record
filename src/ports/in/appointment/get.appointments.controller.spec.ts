@@ -80,7 +80,7 @@ describe('Get Appointment by ID Integration Test Suite', () => {
     expect(response.json()).toEqual({
       statusCode: 404,
       code: 'APPOINTMENT_NOT_FOUND',
-      message: 'No appointment found with the given id: 9999',
+      message: 'Appointment not found',
       service: 'GetAppointmentController',
     });
   });

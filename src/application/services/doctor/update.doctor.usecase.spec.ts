@@ -37,7 +37,7 @@ describe('UpdateDoctorUseCase', () => {
     await expect(updateDoctorUseCase.execute({ id: 999, name: 'Não existe' })).rejects.toMatchObject({
       statusCode: 404,
       code: 'DOCTOR_NOT_FOUND_ERROR',
-      message: 'No doctor found with the given id: 999',
+      message: 'Doctor not found',
       service: 'UpdateDoctorUseCase',
     });
   });

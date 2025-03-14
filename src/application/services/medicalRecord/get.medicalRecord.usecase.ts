@@ -14,12 +14,7 @@ export class GetMedicalRecordUseCase {
   async execute(id: number): Promise<MedicalRecordResponseDTO | null> {
     const record = await this.medicalRecordRepository.findById(id);
     if (!record) {
-      throw new AppError(
-        404,
-        'MEDICAL_RECORD_NOT_FOUND',
-        `No medical record found with the given id: ${id}`,
-        'GetMedicalRecordByIdUseCase',
-      );
+      throw new AppError(404, 'MEDICAL_RECORD_NOT_FOUND', 'No medical record found', GetMedicalRecordUseCase.name);
     }
     return record.toResponse();
   }

@@ -80,7 +80,7 @@ describe('Get Medical Record by ID Integration Test Suite', () => {
     expect(response.json()).toEqual({
       statusCode: 404,
       code: 'MEDICAL_RECORD_NOT_FOUND',
-      message: 'No medical record found with the given id: 9999',
+      message: 'No medical record found',
       service: 'GetMedicalRecordController',
     });
   });

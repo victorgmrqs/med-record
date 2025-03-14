@@ -17,7 +17,7 @@ export class UpdateDoctorUseCase {
     const existingDoctor = await this.doctorRepository.findById(data.id);
 
     if (!existingDoctor) {
-      const message = `No doctor found with the given id: ${data.id}`;
+      const message = 'Doctor not found';
       logger.error({
         message: message,
         service: UpdateDoctorUseCase.name,

@@ -48,7 +48,7 @@ describe('Get Doctor by ID Suite test - Integration', () => {
     expect(response.json()).toEqual({
       statusCode: 404,
       code: 'DOCTOR_NOT_FOUND_ERROR',
-      message: 'No Doctor found with the given id: 1',
+      message: 'Doctor not found',
       service: 'GetDoctorController',
     });
   });
