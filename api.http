@@ -1,7 +1,7 @@
 ### 👉👉👉 VARIABLES 👈👈👈
 @base_url = http://localhost:3001/api/v1
 @doctor_email = "email@email.com"
-@doctor_pass = "1234567"
+@doctor_pass = "123456"
 @token = ""
 @doctor_id = ""
 @patient_id = ""
@@ -18,12 +18,18 @@ Content-Type: application/json
   "password": {{ doctor_pass }}
 }
 
+### ======================================= ###
+
 ### 👉👉👉 SAVE TOKEN 👈👈👈
 @token = {{ login.response.body.token }}
+
+### ======================================= ###
 
 ### 👉👉👉 HEALTH CHECK 👈👈👈
 GET {{base_url}}/healthz HTTP/1.1
 Authorization: Bearer {{ token }}
+
+### ======================================= ###
 
 ### 👉👉👉 CREATE DOCTOR 👈👈👈
 # @name createDoctor
@@ -78,7 +84,8 @@ Authorization: Bearer {{ token }}
   "birthDate": "1990-01-01",
   "sex": "F",
   "height": 1.5,
-  "weight": 60
+  "weight": 60,
+  "doctorId": {{ doctor_id }}
 }
 
 ### 👉👉👉 SAVE PATIENT ID 👈👈👈
@@ -190,6 +197,3 @@ Authorization: Bearer {{ token }}
   "notes": "Take every 6 hours"
 }
 
-### DELETE MEDICAL RECORD BY ID
-DELETE {{base_url}}/medical-records/{{ medical_record_id }} HTTP/1.1
-Authorization: Bearer {{ token }}
