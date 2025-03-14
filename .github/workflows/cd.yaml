@@ -37,7 +37,7 @@ jobs:
           node-version: 22.14.0
 
       - name: Install dependencies
-        run: npm install --omit=dev
+        run: npm install
 
       - name: Generate Prisma Client
         run: npx prisma generate
