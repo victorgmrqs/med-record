@@ -16,4 +16,4 @@ resources:
 images:
 - name: vgmarques/med-record
   newName: vgmarques/med-record
-  newTag: 62d20db5192181825b24c4636123c15269d9d0a2
+  newTag: 9903ed3f9f9dfbcb4f9025b024199a3a1ac2c03e
