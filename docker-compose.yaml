@@ -2,7 +2,9 @@ version: '3'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
     volumes:
@@ -14,15 +16,5 @@ services:
       MYSQL_DATABASE: med_record_db
     ports:
       - 3306:3306
-    volumes:
-      - /home/victor/docker_volumes/mysql:/var/lib/mysql
-
-  mysql-db-test:
-    image: mysql:8.0.30-debian
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: med_record_db_test
-    ports:
-      - 3370:3306
     volumes:
       - /home/victor/docker_volumes/mysql:/var/lib/mysql
