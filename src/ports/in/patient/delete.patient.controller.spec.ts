@@ -1,23 +1,26 @@
 import 'reflect-metadata';
 import { prismaPlugin } from 'adapters/database/prisma/client';
-import { patientsRoutes } from 'adapters/http/patient.routes';
+import routes from 'adapters/http/index.routes';
+import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import { PrismaPatientRepository } from 'application/repositories/patient/patient.repository';
 import { IPatientRepository } from 'application/repositories/patient/patient.repository.interface';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { PrismaClient } from '@prisma/client';
+import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 import { mockMalePatientRequest } from '@tests/mocks/patient.mock';
 
 describe('Delete Patient | Integration test suite', () => {
   const fastify = Fastify();
-  const prisma = new PrismaClient();
 
   beforeAll(async () => {
     container.registerSingleton<IPatientRepository>('PatientRepository', PrismaPatientRepository);
+    container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     fastify.register(prismaPlugin);
-    fastify.register(patientsRoutes);
+    fastify.register(routes);
     await fastify.ready();
   });
 
@@ -26,10 +29,19 @@ describe('Delete Patient | Integration test suite', () => {
   });
 
   it('Delete an Existant patient', async () => {
+    const doctorResponse = await fastify.inject({
+      method: 'POST',
+      url: '/doctors',
+      payload: mockInputDoctorData,
+    });
+    expect(doctorResponse.statusCode).toBe(201);
+    const doctorId = doctorResponse.json().id;
+
+    const patientCreate = { ...mockMalePatientRequest, doctorId };
     const created = await fastify.inject({
       method: 'POST',
-      url: '/',
-      payload: mockMalePatientRequest,
+      url: '/patients',
+      payload: patientCreate,
     });
 
     expect(created.statusCode).toBe(201);
@@ -37,7 +49,7 @@ describe('Delete Patient | Integration test suite', () => {
 
     const deleteResponse = await fastify.inject({
       method: 'DELETE',
-      url: `/${createdPatientID}`,
+      url: `/patients/${createdPatientID}`,
     });
 
     expect(deleteResponse.statusCode).toBe(204);
@@ -45,7 +57,7 @@ describe('Delete Patient | Integration test suite', () => {
   it('Delete a non-existent patient returns 404', async () => {
     const response = await fastify.inject({
       method: 'DELETE',
-      url: '/999',
+      url: '/patients/999',
     });
     expect(response.statusCode).toBe(404);
   });
@@ -53,7 +65,7 @@ describe('Delete Patient | Integration test suite', () => {
   it('Delete with malformed ID returns 400', async () => {
     const response = await fastify.inject({
       method: 'DELETE',
-      url: '/invalid-id-format',
+      url: '/patients/invalid-id-format',
     });
     expect(response.statusCode).toBe(400);
     expect(response.json()).toMatchObject({

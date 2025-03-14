@@ -12,6 +12,6 @@ export class GetAllPatientsUseCase {
 
   async execute(): Promise<PatientResponseDTO[]> {
     const patients = await this.patientRepository.findAll();
-    return Patient.mapPatientToResponse(patients);
+    return Patient.toArrayResponse(patients);
   }
 }

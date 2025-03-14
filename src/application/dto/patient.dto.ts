@@ -6,13 +6,7 @@ interface IBasePatient {
   sex: 'M' | 'F';
   height: number;
   weight: number;
-}
-
-export interface IPatientResponse extends IBasePatient {
-  id: number;
-}
-interface IUpdateDoctorRequest extends IBasePatient {
-  id: number;
+  doctorId: number;
 }
 
 interface IUpdatePatientRequest extends Omit<Partial<IBasePatient>, 'email' | 'sex'> {
@@ -22,6 +16,19 @@ interface IUpdatePatientRequest extends Omit<Partial<IBasePatient>, 'email' | 's
   birthDate?: any;
   height?: number;
   weight?: number;
+  doctorId?: number;
+}
+
+export interface IPatientResponse {
+  id: number;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  birthDate: string;
+  sex: 'M' | 'F';
+  height: number;
+  weight: number;
+  doctorId: number;
 }
 
 export type PatientResponseDTO = IPatientResponse;

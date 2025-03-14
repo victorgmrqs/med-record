@@ -25,6 +25,7 @@ export const mockMalePatientRequest = {
   sex: 'M',
   height: 1.8,
   weight: 75,
+  doctorId: 1,
 };
 
 // 2. Estado no banco antes da atualização
@@ -37,6 +38,7 @@ export const mockMalePatientDBResponse = new Patient(
   'M',
   1.8,
   75,
+  1,
   new Date('2021-01-01'),
   new Date('2021-01-01'),
 );
@@ -57,6 +59,7 @@ export const mockUpdatedMalePatient = new Patient(
   'M',
   1.8,
   70,
+  1,
   new Date('2021-01-01'),
   new Date(), // Atualizado na última modificação
 );
@@ -75,6 +78,7 @@ export const mockFemalePatientRequest: PatientRequestDTO = {
   sex: 'F',
   height: 1.6,
   weight: 60,
+  doctorId: 1,
 };
 
 // 2. Estado no banco antes da atualização
@@ -87,6 +91,7 @@ export const mockFemalePatientDBResponse = new Patient(
   'F',
   1.6,
   60,
+  1,
   new Date('2021-01-01'),
   new Date('2021-01-01'),
 );
@@ -108,6 +113,7 @@ export const mockUpdatedFemalePatient = new Patient(
   'F',
   1.65, // Atualizado
   60,
+  1,
   new Date('2021-01-01'),
   new Date(), // Atualizado na última modificação
 );

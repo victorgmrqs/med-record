@@ -29,8 +29,8 @@ export class CreatePatientController {
         sex: z.enum(['M', 'F']),
         height: z.number(),
         weight: z.number(),
+        doctorId: z.number(),
       });
-
       const patient = bodySchema.parse(request.body);
       const createPatientUseCase = container.resolve(CreatePatientUseCase);
       const patientID = await createPatientUseCase.execute(patient);

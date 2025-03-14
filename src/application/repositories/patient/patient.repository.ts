@@ -6,79 +6,62 @@ import { IPatientRepository } from './patient.repository.interface';
 
 export class PrismaPatientRepository implements IPatientRepository {
   async create(patient: PatientRequestDTO): Promise<Patient> {
-    const data = await prisma.patient.create({
+    const data = await prisma.patients.create({
       data: {
-        ...patient,
-        birthDate: new Date(patient.birthDate + 'T00:00:00.000Z'),
+        name: patient.name,
+        email: patient.email,
+        phone_number: patient.phoneNumber,
+        birth_date: new Date(patient.birthDate + 'T00:00:00.000Z'),
+        sex: patient.sex,
+        height: patient.height,
+        weight: patient.weight,
+        doctor_id: patient.doctorId,
       },
     });
-    const formatted = data.birthDate.toISOString().split('T')[0];
-    const patients = new Patient(
-      data.id,
-      data.name,
-      data.email,
-      data.phoneNumber,
-      formatted,
-      data.sex,
-      Number(data.height),
-      Number(data.weight),
-    );
-    return patients;
+    return Patient.fromDBRepository(data);
   }
 
   async findAll(): Promise<Patient[]> {
-    const patients = await prisma.patient.findMany();
-    return patients.map((patient) => {
-      return new Patient(
-        patient.id,
-        patient.name,
-        patient.email,
-        patient.phoneNumber,
-        patient.birthDate.toISOString(),
-        patient.sex,
-        Number(patient.height),
-        Number(patient.weight),
-      );
+    const patients = await prisma.patients.findMany({
+      where: { deleted_at: null },
     });
+    return patients.map(Patient.fromDBRepository);
   }
-  async findByEmail(email: string): Promise<Boolean> {
-    const patient = await prisma.patient.findFirst({ where: { email } });
+
+  async findByEmail(email: string): Promise<boolean> {
+    const patient = await prisma.patients.findFirst({ where: { email } });
     return !!patient;
   }
 
   async findById(id: number): Promise<Patient | null> {
-    const patient = await prisma.patient.findUnique({ where: { id } });
-    if (!patient) return null;
-    return new Patient(
-      patient.id,
-      patient.name,
-      patient.email,
-      patient.phoneNumber,
-      patient.birthDate.toISOString(),
-      patient.sex,
-      Number(patient.height),
-      Number(patient.weight),
-    );
+    const patient = await prisma.patients.findUnique({ where: { id } });
+    if (!patient || patient.deleted_at !== null) return null;
+    return Patient.fromDBRepository(patient);
   }
 
   async update(data: UpdatePatientRequestDTO): Promise<Patient> {
-    const patient = await prisma.patient.update({
+    const patient = await prisma.patients.update({
       where: { id: data.id },
-      data,
+      data: {
+        name: data.name,
+        phone_number: data.phoneNumber,
+        birth_date: data.birthDate ? new Date(data.birthDate + 'T00:00:00.000Z') : undefined,
+        height: data.height,
+        weight: data.weight,
+      },
     });
-    return new Patient(
-      patient.id,
-      patient.name,
-      patient.email,
-      patient.phoneNumber,
-      patient.birthDate.toISOString(),
-      patient.sex,
-      Number(patient.height),
-      Number(patient.weight),
-    );
+    return Patient.fromDBRepository(patient);
   }
 
   async delete(id: number): Promise<void> {
-    await prisma.patient.delete({ where: { id } });
+    await prisma.patients.update({
+      where: { id },
+      data: {
+        name: { set: null },
+        email: { set: null },
+        phone_number: { set: null },
+        deleted_at: new Date(),
+      },
+    });
   }
 }
