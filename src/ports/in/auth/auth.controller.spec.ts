@@ -8,11 +8,8 @@ import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
-import { PrismaClient } from '@prisma/client';
-
 describe('Auth Login Integration Test Suite', () => {
   const fastify = Fastify();
-  const prisma = new PrismaClient();
 
   beforeAll(async () => {
     container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
@@ -24,9 +21,7 @@ describe('Auth Login Integration Test Suite', () => {
   });
 
   afterAll(async () => {
-    await prisma.doctor.deleteMany();
     await fastify.close();
-    await prisma.$disconnect();
   });
 
   it('should return a token when valid credentials are provided', async () => {

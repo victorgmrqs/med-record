@@ -41,8 +41,13 @@ export function handleError(error: any, request: FastifyRequest, reply: FastifyR
     });
   }
 
+  logger.error({
+    message: error.message,
+    code: 'INTERNAL_SERVER_ERROR',
+    service,
+    error,
+  });
   return reply.status(500).send({
     message: 'Internal server error',
-    error: error.message,
   });
 }
