@@ -15,7 +15,7 @@ describe('GetAllAppointmentsUseCase Unit Tests', () => {
     vi.spyOn(mockAppointmentRepository, 'findAll').mockResolvedValue(mockAllAppointmentsResponse);
 
     const appointments = await getAllAppointmentsUseCase.execute();
-    const expectedResponse = Appointment.mapAppointmentsToResponse(mockAllAppointmentsResponse);
+    const expectedResponse = Appointment.toArrayResponse(mockAllAppointmentsResponse);
 
     expect(mockAppointmentRepository.findAll).toHaveBeenCalledTimes(1);
     expect(appointments).toEqual(expectedResponse);

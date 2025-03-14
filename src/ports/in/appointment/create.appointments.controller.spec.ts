@@ -59,10 +59,19 @@ describe('Create Appointments Suite Test', () => {
   });
 
   it('should return 400 when doctor does not exist', async () => {
+    const doctorResponse = await fastify.inject({
+      method: 'POST',
+      url: '/doctors',
+      payload: mockInputDoctorData,
+    });
+    expect(doctorResponse.statusCode).toBe(201);
+    const doctorId = doctorResponse.json().id;
+
+    const patientCreate = { ...mockMalePatientRequest, doctorId };
     const createdPatient = await fastify.inject({
       method: 'POST',
       url: '/patients',
-      payload: mockMalePatientRequest,
+      payload: patientCreate,
     });
     const patientId = createdPatient.json().id;
 
@@ -78,7 +87,6 @@ describe('Create Appointments Suite Test', () => {
       url: '/appointments',
       payload: inputBody,
     });
-
     expect(response.statusCode).toBe(400);
     expect(response.json()).toMatchObject({
       statusCode: 400,

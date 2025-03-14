@@ -12,7 +12,7 @@ export const mockAppointmentRepository: IAppointmentRepository = {
   findByDay: vi.fn(),
   isDoctorAvailable: vi.fn(),
   findByDoctorAndDate: vi.fn(),
-  findByPatientAndDate: vi.fn(),
+  findByDoctorAndDate: vi.fn(),
   findDoctorAppointments: vi.fn(),
   findPatientAppointments: vi.fn(),
   update: vi.fn(),

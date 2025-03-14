@@ -11,6 +11,6 @@ export class GetAllAppointmentsUseCase {
 
   async execute(): Promise<{ id: number; doctorId: number; patientId: number; appointmentDate: string }[]> {
     const appointments = await this.appointmentRepository.findAll();
-    return Appointment.mapAppointmentsToResponse(appointments);
+    return Appointment.toArrayResponse(appointments);
   }
 }
