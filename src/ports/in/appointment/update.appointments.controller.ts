@@ -20,21 +20,16 @@ export class UpdateAppointmentController {
       const { id } = paramsSchema.parse(request.params);
 
       const bodySchema = z.object({
-        doctorId: z.number().optional(),
-        patientId: z.number().optional(),
-        appointmentDate: z
-          .preprocess((arg) => {
-            const d = new Date(arg as string);
-            return isNaN(d.getTime()) ? undefined : d;
-          }, z.instanceof(Date))
-          .optional(),
+        appointmentDate: z.preprocess((arg) => {
+          const d = new Date(arg as string);
+          return isNaN(d.getTime()) ? undefined : d;
+        }, z.instanceof(Date)),
       });
       const bodyData = bodySchema.parse(request.body);
 
       const updateData = {
         id,
-        ...bodyData,
-        appointmentDate: bodyData.appointmentDate?.toISOString(),
+        appointmentDate: bodyData.appointmentDate,
       };
 
       const updateAppointmentUseCase = container.resolve(UpdateAppointmentUseCase);

@@ -1,12 +1,15 @@
 import 'reflect-metadata';
 import { prismaPlugin } from 'adapters/database/prisma/client';
-import { patientsRoutes } from 'adapters/http/patient.routes';
+import routes from 'adapters/http/index.routes';
+import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
+import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import { PrismaPatientRepository } from 'application/repositories/patient/patient.repository';
 import { IPatientRepository } from 'application/repositories/patient/patient.repository.interface';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { mockInputDoctorData } from '@tests/mocks/doctor.mock';
 import {
   mockMalePatientInputDataToUpdate,
   mockMalePatientRequest,
@@ -18,8 +21,10 @@ describe('Update Patient - Integration Test Suite', () => {
 
   beforeAll(async () => {
     container.registerSingleton<IPatientRepository>('PatientRepository', PrismaPatientRepository);
+    container.registerSingleton('DoctorRepository', PrismaDoctorRepository);
+    container.registerSingleton('HashRepository', CryptoHashRepository);
     fastify.register(prismaPlugin);
-    fastify.register(patientsRoutes);
+    fastify.register(routes);
     await fastify.ready();
   });
 
@@ -28,17 +33,26 @@ describe('Update Patient - Integration Test Suite', () => {
   });
 
   it('should update an existing patient', async () => {
+    const doctorResponse = await fastify.inject({
+      method: 'POST',
+      url: '/doctors',
+      payload: mockInputDoctorData,
+    });
+    expect(doctorResponse.statusCode).toBe(201);
+    const doctorId = doctorResponse.json().id;
+
+    const patientCreate = { ...mockMalePatientRequest, doctorId };
     const created = await fastify.inject({
       method: 'POST',
-      url: '/',
-      payload: mockMalePatientRequest,
+      url: '/patients',
+      payload: patientCreate,
     });
 
     expect(created.statusCode).toBe(201);
-
+    const patientId = created.json().id;
     const response = await fastify.inject({
       method: 'PUT',
-      url: '/1',
+      url: `/patients/${patientId}`,
       payload: mockMalePatientInputDataToUpdate,
     });
 
@@ -49,7 +63,7 @@ describe('Update Patient - Integration Test Suite', () => {
   it('should return 404 if the patient does not exist', async () => {
     const response = await fastify.inject({
       method: 'PUT',
-      url: '/9999',
+      url: '/patients/9999',
       payload: { name: 'Does not matter' },
     });
 

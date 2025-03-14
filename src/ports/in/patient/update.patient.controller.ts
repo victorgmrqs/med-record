@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-
 import { UpdatePatientUseCase } from 'application/services/patient/update.patient.usecase';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { container } from 'tsyringe';
@@ -14,12 +13,13 @@ export class UpdatePatientController {
       message: 'Update Patient Controller',
       service: UpdatePatientController.name,
     });
+
     const paramsSchema = z.object({
       id: z.coerce.number(),
     });
-
     try {
       const params = paramsSchema.parse(request.params);
+
       const bodySchema = z.object({
         name: z.string().optional(),
         phoneNumber: z.string().optional(),

@@ -4,6 +4,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { vi } from 'vitest';
 
 import AppError from '@shared/errors/AppError';
+import { mockDoctorDBResponseWithPassword, mockDoctorRepository } from '@tests/mocks/doctor.mock';
 import {
   mockPatientRepository,
   mockFemalePatientDBResponse,
@@ -16,12 +17,13 @@ describe('CreatePatientUseCase', () => {
   let createPatientUseCase: CreatePatientUseCase;
 
   beforeEach(() => {
-    createPatientUseCase = new CreatePatientUseCase(mockPatientRepository);
+    createPatientUseCase = new CreatePatientUseCase(mockPatientRepository, mockDoctorRepository);
     vi.clearAllMocks();
   });
 
-  it('deve criar um paciente novo', async () => {
+  it('should create a new patient', async () => {
     vi.spyOn(mockPatientRepository, 'findByEmail').mockResolvedValueOnce(null);
+    vi.spyOn(mockDoctorRepository, 'findById').mockResolvedValueOnce(mockDoctorDBResponseWithPassword);
     vi.spyOn(mockPatientRepository, 'create').mockResolvedValueOnce(mockFemalePatientDBResponse);
 
     const result = await createPatientUseCase.execute(mockFemalePatientRequest);
@@ -31,7 +33,7 @@ describe('CreatePatientUseCase', () => {
     expect(result).toBe(mockFemalePatientDBResponse.id);
   });
 
-  it('deve lançar um AppError se o paciente já existir', async () => {
+  it('should throw an erro if patient exists', async () => {
     vi.spyOn(mockPatientRepository, 'findByEmail').mockResolvedValueOnce(true);
 
     await expect(createPatientUseCase.execute(mockFemalePatientRequest)).rejects.toBeInstanceOf(AppError);

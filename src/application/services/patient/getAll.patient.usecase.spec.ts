@@ -17,7 +17,7 @@ describe('GetAllPatientsUseCase', () => {
   it('should return all patients', async () => {
     vi.spyOn(mockPatientRepository, 'findAll').mockResolvedValue(mockAllPatientsResponse);
     const patients = await getAllPatientsUseCase.execute();
-    const expectedResponse = Patient.mapPatientToResponse(mockAllPatientsResponse);
+    const expectedResponse = Patient.toArrayResponse(mockAllPatientsResponse);
     expect(mockPatientRepository.findAll).toHaveBeenCalledTimes(1);
     expect(patients).toEqual(expectedResponse);
     expect(patients.length).toBe(2);

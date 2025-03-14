@@ -20,7 +20,7 @@ describe('GetAllDoctorsUseCase', () => {
 
     const doctors = await getAllDoctorsUseCase.execute();
 
-    const expectedFormatedDoctors = Doctor.mapDoctorToResponse(mockDoctors);
+    const expectedFormatedDoctors = Doctor.toArrayResponse(mockDoctors);
     expect(mockDoctorRepository.findAll).toHaveBeenCalledTimes(1);
     expect(doctors).toEqual(expectedFormatedDoctors);
     expect(doctors.length).toBe(mockDoctors.length);

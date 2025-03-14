@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { prismaPlugin } from 'adapters/database/prisma/client';
 import { doctorRoutes } from 'adapters/http/doctor.routes';
 import { PrismaDoctorRepository } from 'application/repositories/doctor/doctor.repository';
-import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
 import { CryptoHashRepository } from 'application/repositories/hash/crypto.repository';
 import Fastify from 'fastify';
 import { container } from 'tsyringe';

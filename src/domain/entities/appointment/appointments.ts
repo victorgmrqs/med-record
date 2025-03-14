@@ -17,10 +17,27 @@ export class Appointment {
     };
   }
 
-  public static mapAppointmentsToResponse(
+  public static fromDBRepository(appt: {
+    id: number;
+    doctor_id: number;
+    patient_id: number;
+    appointment_date: Date;
+    created_at?: Date;
+    updated_at?: Date;
+  }): Appointment {
+    return new Appointment(
+      appt.id,
+      appt.doctor_id,
+      appt.patient_id,
+      appt.appointment_date,
+      appt.created_at,
+      appt.updated_at,
+    );
+  }
+
+  public static toArrayResponse(
     appointments: Appointment[],
   ): { id: number; doctorId: number; patientId: number; appointmentDate: string }[] {
-    const response = appointments.map((appt) => appt.toResponse());
-    return response;
+    return appointments.map((appt) => appt.toResponse());
   }
 }

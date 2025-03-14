@@ -8,61 +8,53 @@ import { IDoctorRepository } from './doctor.repository.interface';
 @injectable()
 export class PrismaDoctorRepository implements IDoctorRepository {
   async create(doctor: IDoctorDTO): Promise<Doctor> {
-    const createdDoctor = await prisma.doctor.create({
+    const createdDoctor = await prisma.doctors.create({
       data: {
         name: doctor.name,
         email: doctor.email,
-        password: doctor.password ?? '',
+        password: doctor.password!,
       },
     });
-    return new Doctor(
-      createdDoctor.id,
-      createdDoctor.name,
-      createdDoctor.email,
-      createdDoctor.password,
-      createdDoctor.created_at,
-      createdDoctor.updated_at,
-    );
+
+    return Doctor.fromDBRepository(createdDoctor);
   }
 
   async findAll(): Promise<Doctor[]> {
-    const doctors = await prisma.doctor.findMany();
-    return doctors.map(
-      (doctor) =>
-        new Doctor(doctor.id, doctor.name, doctor.email, doctor.password, doctor.created_at, doctor.updated_at),
-    );
+    const doctors = await prisma.doctors.findMany({
+      where: { deleted_at: null },
+    });
+    return doctors.map(Doctor.fromDBRepository);
   }
 
   async findByEmail(email: string): Promise<Doctor | null> {
-    const doctor = await prisma.doctor.findFirst({ where: { email } });
+    const doctor = await prisma.doctors.findFirst({ where: { email } });
     if (!doctor) return null;
-    return new Doctor(doctor.id, doctor.name, doctor.email, doctor.password, doctor.created_at, doctor.updated_at);
+    return Doctor.fromDBRepository(doctor);
   }
 
   async findById(id: number): Promise<Doctor | null> {
-    const doctor = await prisma.doctor.findUnique({ where: { id } });
-    if (!doctor) return null;
-    return new Doctor(doctor.id, doctor.name, doctor.email, doctor.password, doctor.created_at, doctor.updated_at);
+    const doctor = await prisma.doctors.findUnique({ where: { id } });
+    if (!doctor || doctor.deleted_at !== null) return null;
+    return Doctor.fromDBRepository(doctor);
   }
 
   async update(doctor: IUpdateDoctorRequestDTO): Promise<Doctor> {
-    const updatedDoctor = await prisma.doctor.update({
+    const updatedDoctor = await prisma.doctors.update({
       where: { id: doctor.id },
       data: doctor,
     });
-    return new Doctor(
-      updatedDoctor.id,
-      updatedDoctor.name,
-      updatedDoctor.email,
-      updatedDoctor.password,
-      updatedDoctor.created_at,
-      updatedDoctor.updated_at,
-    );
+    return Doctor.fromDBRepository(updatedDoctor);
   }
 
   async delete(doctorId: number): Promise<void> {
-    await prisma.doctor.delete({
+    await prisma.doctors.update({
       where: { id: doctorId },
+      data: {
+        name: { set: null },
+        email: { set: null },
+        password: { set: null },
+        deleted_at: new Date(),
+      },
     });
   }
 }

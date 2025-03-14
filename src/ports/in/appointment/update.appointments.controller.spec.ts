@@ -30,7 +30,7 @@ describe('Update Appointment Integration Test Suite', () => {
     await fastify.close();
   });
 
-  it('should update an existing appointment successfully', async () => {
+  it('should update an existing appointment successfully (only appointmentDate changes)', async () => {
     const doctorResponse = await fastify.inject({
       method: 'POST',
       url: '/doctors',
@@ -55,20 +55,19 @@ describe('Update Appointment Integration Test Suite', () => {
       payload: createPayload,
     });
     expect(createResponse.statusCode).toBe(201);
+    const appointmentId = createResponse.json().id;
 
     const updatePayload = {
-      doctorId,
-      patientId,
       appointmentDate: new Date('2020-01-01T17:00:00.000Z').toISOString(),
     };
     const updateResponse = await fastify.inject({
       method: 'PUT',
-      url: '/appointments/1',
+      url: `/appointments/${appointmentId}`,
       payload: updatePayload,
     });
     expect(updateResponse.statusCode).toBe(200);
     const updatedAppointment = updateResponse.json();
-    expect(updatedAppointment).toHaveProperty('id', 1);
+    expect(updatedAppointment).toHaveProperty('id', appointmentId);
     expect(updatedAppointment).toHaveProperty('doctorId', doctorId);
     expect(updatedAppointment).toHaveProperty('patientId', patientId);
     expect(updatedAppointment.appointmentDate).toBe(new Date('2020-01-01T17:00:00.000Z').toISOString());
@@ -76,8 +75,6 @@ describe('Update Appointment Integration Test Suite', () => {
 
   it('should return 404 when updating a non-existent appointment', async () => {
     const updatePayload = {
-      doctorId: 1,
-      patientId: 2,
       appointmentDate: new Date('2020-01-01T17:00:00.000Z').toISOString(),
     };
 
@@ -100,7 +97,6 @@ describe('Update Appointment Integration Test Suite', () => {
       method: 'PUT',
       url: '/appointments/1',
       payload: {
-        doctorId: 'invalid',
         appointmentDate: 'not-a-date',
       },
     });
@@ -108,94 +104,6 @@ describe('Update Appointment Integration Test Suite', () => {
     const data = updateResponse.json();
     expect(data).toHaveProperty('message');
     expect(data.message).toMatch(/Validation error/);
-  });
-
-  it('should return 400 when doctor does not exist', async () => {
-    const doctorResponse = await fastify.inject({
-      method: 'POST',
-      url: '/doctors',
-      payload: mockInputDoctorData,
-    });
-    const patientResponse = await fastify.inject({
-      method: 'POST',
-      url: '/patients',
-      payload: mockMalePatientRequest,
-    });
-    const doctorId = doctorResponse.json().id;
-    const patientId = patientResponse.json().id;
-
-    const createPayload = {
-      doctorId,
-      patientId,
-      appointmentDate: new Date('2020-01-01T16:00:00.000Z').toISOString(),
-    };
-    const createResponse = await fastify.inject({
-      method: 'POST',
-      url: '/appointments',
-      payload: createPayload,
-    });
-    expect(createResponse.statusCode).toBe(201);
-
-    const updatePayload = {
-      doctorId: 999,
-      patientId,
-      appointmentDate: new Date('2020-01-01T16:00:00.000Z').toISOString(),
-    };
-    const response = await fastify.inject({
-      method: 'PUT',
-      url: '/appointments/1',
-      payload: updatePayload,
-    });
-    expect(response.statusCode).toBe(400);
-    expect(response.json()).toMatchObject({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: 'Doctor not found',
-    });
-  });
-
-  it('should return 400 when patient does not exist', async () => {
-    const doctorResponse = await fastify.inject({
-      method: 'POST',
-      url: '/doctors',
-      payload: mockInputDoctorData,
-    });
-    const patientResponse = await fastify.inject({
-      method: 'POST',
-      url: '/patients',
-      payload: mockMalePatientRequest,
-    });
-    const doctorId = doctorResponse.json().id;
-    const patientId = patientResponse.json().id;
-
-    const createPayload = {
-      doctorId,
-      patientId,
-      appointmentDate: new Date('2020-01-01T16:00:00.000Z').toISOString(),
-    };
-    const createResponse = await fastify.inject({
-      method: 'POST',
-      url: '/appointments',
-      payload: createPayload,
-    });
-    expect(createResponse.statusCode).toBe(201);
-
-    const updatePayload = {
-      doctorId,
-      patientId: 999,
-      appointmentDate: new Date('2020-01-01T16:00:00.000Z').toISOString(),
-    };
-    const response = await fastify.inject({
-      method: 'PUT',
-      url: '/appointments/1',
-      payload: updatePayload,
-    });
-    expect(response.statusCode).toBe(400);
-    expect(response.json()).toMatchObject({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: 'Patient not found',
-    });
   });
 
   it('should return 400 when appointment time is outside business hours', async () => {
@@ -223,15 +131,14 @@ describe('Update Appointment Integration Test Suite', () => {
       payload: createPayload,
     });
     expect(createResponse.statusCode).toBe(201);
+    const appointmentId = createResponse.json().id;
 
     const updatePayload = {
-      doctorId,
-      patientId,
       appointmentDate: new Date('2020-01-01T06:00:00.000Z').toISOString(),
     };
     const response = await fastify.inject({
       method: 'PUT',
-      url: '/appointments/1',
+      url: `/appointments/${appointmentId}`,
       payload: updatePayload,
     });
     expect(response.statusCode).toBe(400);
@@ -279,15 +186,14 @@ describe('Update Appointment Integration Test Suite', () => {
       payload: secondPayload,
     });
     expect(createResponse2.statusCode).toBe(201);
+    const secondAppointmentId = createResponse2.json().id;
 
     const updatePayload = {
-      doctorId,
-      patientId,
       appointmentDate: new Date('2020-01-01T16:00:00.000Z').toISOString(),
     };
     const conflictResponse = await fastify.inject({
       method: 'PUT',
-      url: `/appointments/${createResponse2.json().id}`,
+      url: `/appointments/${secondAppointmentId}`,
       payload: updatePayload,
     });
 

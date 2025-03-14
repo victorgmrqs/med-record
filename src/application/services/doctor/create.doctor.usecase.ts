@@ -17,24 +17,20 @@ export class CreateDoctorUseCase {
     const doctorExists = await this.doctorRepository.findByEmail(doctor.email);
     if (doctorExists) {
       const message = 'Doctor already exists';
-      logger.error({
-        message: message,
-        service: CreateDoctorUseCase.name,
-      });
+      logger.error({ message, service: CreateDoctorUseCase.name });
       throw new AppError(400, 'VALIDATION_ERROR', message, CreateDoctorUseCase.name);
     }
+
     if (!doctor.password) {
       const message = 'Password is required';
-      logger.error({
-        message: message,
-        service: CreateDoctorUseCase.name,
-      });
+      logger.error({ message, service: CreateDoctorUseCase.name });
       throw new AppError(400, 'VALIDATION_ERROR', message, CreateDoctorUseCase.name);
     }
-    const hashedPassword = await this.hashRepository.hash(doctor.password);
-    doctor.password = hashedPassword;
 
-    const createdDoctor = await this.doctorRepository.create(doctor);
+    const hashedPassword = await this.hashRepository.hash(doctor.password);
+    const doctorData = { ...doctor, password: hashedPassword };
+
+    const createdDoctor = await this.doctorRepository.create(doctorData);
     return createdDoctor.id;
   }
 }

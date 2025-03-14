@@ -1,7 +1,7 @@
 import { CreateMedicalRecordRequestDTO } from 'application/dto/medicalRecord.dto';
 import { IAppointmentRepository } from 'application/repositories/appointment/appointment.repository.interface';
 import { IDoctorRepository } from 'application/repositories/doctor/doctor.repository.interface';
-import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.respository.interface';
+import { IMedicalRecordRepository } from 'application/repositories/medicalRecord/medicalRecord.repository.interface';
 import { IPatientRepository } from 'application/repositories/patient/patient.repository.interface';
 import { injectable, inject } from 'tsyringe';
 

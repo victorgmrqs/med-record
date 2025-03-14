@@ -1,6 +1,5 @@
-import 'reflect-metadata';
 import { UpdateDoctorUseCase } from 'application/services/doctor/update.doctor.usecase';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { container } from 'tsyringe';
 import { z } from 'zod';
 
@@ -10,7 +9,7 @@ import { handleError } from '@shared/errors/error.handler';
 export class UpdateDoctorController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
     logger.info({
-      message: 'Updating a doctor',
+      message: `Starting ${UpdateDoctorController.name}`,
       service: UpdateDoctorController.name,
     });
 
@@ -26,10 +25,17 @@ export class UpdateDoctorController {
       const params = paramsSchema.parse(request.params);
       const id = params.id;
       const body = bodySchema.parse(request.body);
-      const updateDoctorUseCase = container.resolve(UpdateDoctorUseCase);
-      const doctor = await updateDoctorUseCase.execute({ id, ...body });
 
-      reply.code(200).send(doctor);
+      const updateData = { id, ...body };
+
+      const updateDoctorUseCase = container.resolve(UpdateDoctorUseCase);
+      const doctor = await updateDoctorUseCase.execute(updateData);
+
+      logger.info({
+        message: `Finishing ${UpdateDoctorController.name}`,
+        service: UpdateDoctorController.name,
+      });
+      return reply.code(200).send(doctor);
     } catch (error: any) {
       return handleError(error, request, reply, UpdateDoctorController.name);
     }

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,80 +7,70 @@ datasource med_record_db {
   url      = env("DATABASE_URL")
 }
 
-// Adicionando modelos gerados a partir do model.sql
-
-enum Sex {
+enum sex {
   M
   F
 }
 
-model Doctor {
-  id             Int             @id @default(autoincrement())
-  name           String          @med_record_db.VarChar(150)
-  email          String          @unique @med_record_db.VarChar(50)
-  password       String          @med_record_db.VarChar(255)
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
-  // Relações
-  doctorPatients DoctorPatient[]
-  appointments   Appointment[]
-  medicalRecords MedicalRecord[]
+model doctors {
+  id         Int       @id @default(autoincrement())
+  name       String?   @med_record_db.VarChar(150)
+  email      String?   @unique @med_record_db.VarChar(50)
+  password   String?   @med_record_db.VarChar(255)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  patients        patients[]
+  appointments    appointments[]
+  medical_records medical_records[]
 }
 
-model Patient {
-  id             Int             @id @default(autoincrement())
-  name           String          @med_record_db.VarChar(150)
-  email          String          @unique @med_record_db.VarChar(50)
-  phoneNumber    String          @med_record_db.VarChar(15)
-  birthDate      DateTime        @med_record_db.Date
-  sex            Sex
-  height         Decimal         @med_record_db.Decimal(3, 2)
-  weight         Decimal         @med_record_db.Decimal(5, 2)
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
-  // Relações
-  doctorPatients DoctorPatient[]
-  appointments   Appointment[]
-  medicalRecords MedicalRecord[]
+model patients {
+  id           Int       @id @default(autoincrement())
+  name         String?   @med_record_db.VarChar(150)
+  email        String?   @unique @med_record_db.VarChar(50)
+  phone_number String?   @med_record_db.VarChar(15)
+  birth_date   DateTime  @med_record_db.Date
+  sex          sex
+  height       Decimal   @med_record_db.Decimal(3, 2)
+  weight       Decimal   @med_record_db.Decimal(5, 2)
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  deleted_at   DateTime?
+
+  doctor_id Int
+  doctor    doctors @relation(fields: [doctor_id], references: [id])
+
+  appointments    appointments[]
+  medical_records medical_records[]
 }
 
-model DoctorPatient {
-  id         Int      @id @default(autoincrement())
-  doctor_id  Int
-  patient_id Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  // Relações
-  doctor     Doctor   @relation(fields: [doctor_id], references: [id])
-  patient    Patient  @relation(fields: [patient_id], references: [id])
+model appointments {
+  id               Int      @id @default(autoincrement())
+  doctor_id        Int
+  patient_id       Int
+  appointment_date DateTime
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  doctor          doctors           @relation(fields: [doctor_id], references: [id])
+  patient         patients          @relation(fields: [patient_id], references: [id])
+  medical_records medical_records[]
 }
 
-model Appointment {
-  id              Int             @id @default(autoincrement())
-  doctor_id       Int
-  patient_id      Int
-  appointmentDate DateTime
-  created_at      DateTime        @default(now())
-  updated_at      DateTime        @updatedAt
-  // Relações
-  doctor          Doctor          @relation(fields: [doctor_id], references: [id])
-  patient         Patient         @relation(fields: [patient_id], references: [id])
-  medicalRecords  MedicalRecord[]
-}
-
-model MedicalRecord {
-  id             Int         @id @default(autoincrement())
+model medical_records {
+  id             Int      @id @default(autoincrement())
   doctor_id      Int
   patient_id     Int
   appointment_id Int
-  description    String?
   diagnosis      String?
   prescription   String?
   notes          String?
-  created_at     DateTime    @default(now())
-  updated_at     DateTime    @updatedAt
-  // Relações
-  doctor         Doctor      @relation(fields: [doctor_id], references: [id])
-  patient        Patient     @relation(fields: [patient_id], references: [id])
-  appointment    Appointment @relation(fields: [appointment_id], references: [id])
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  doctor      doctors      @relation(fields: [doctor_id], references: [id])
+  patient     patients     @relation(fields: [patient_id], references: [id])
+  appointment appointments @relation(fields: [appointment_id], references: [id])
 }

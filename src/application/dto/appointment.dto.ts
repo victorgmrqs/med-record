@@ -9,8 +9,9 @@ interface ICreateAppointmentDTO extends IBaseAppointment {}
 interface IAppointmentResponse extends IBaseAppointment {
   id: number;
 }
-export interface IUpdateAppointmentDTO extends Partial<IBaseAppointment> {
+export interface IUpdateAppointmentDTO {
   id: number;
+  appointmentDate: Date;
 }
 export type CreateAppointmentRequestDTO = ICreateAppointmentDTO;
 export type UpdateAppointmentRequestDTO = IUpdateAppointmentDTO;

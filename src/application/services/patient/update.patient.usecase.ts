@@ -14,6 +14,10 @@ export class UpdatePatientUseCase {
   ) {}
 
   async execute(data: UpdatePatientRequestDTO): Promise<PatientResponseDTO | null> {
+    logger.info({
+      message: 'Update Patient Use Case',
+      service: UpdatePatientUseCase.name,
+    });
     const existingPatient = await this.patientRepository.findById(data.id);
 
     if (!existingPatient) {
@@ -25,10 +29,10 @@ export class UpdatePatientUseCase {
       throw new AppError(404, 'PATIENT_NOT_FOUND_ERROR', message, UpdatePatientUseCase.name);
     }
 
-    existingPatient.updateWith(data);
+    const { doctorId, ...updateData } = data;
+    existingPatient.updateWith(updateData);
 
     const updatedPatient = await this.patientRepository.update(existingPatient);
-
     return updatedPatient.toResponse();
   }
 }
