@@ -1,0 +1,1991 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Med Record | API Documentation",
+    "description": "Documentation for the Med Record API, an example of a medical record system.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "description": "Local server",
+      "url": "http://localhost:3001"
+    },
+    {
+      "description": "Production server",
+      "url": "https://med-record.goncalvesmarques.com"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Realiza login de um usuário",
+        "description": "Gera um token JWT se as credenciais estiverem corretas.",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "doctor@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "JWT-TOKEN-EXAMPLE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "UNAUTHORIZED"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "AuthController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/doctors": {
+      "post": {
+        "summary": "Create a new doctor",
+        "tags": [
+          "Doctors"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDoctorBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Doctor created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDoctorSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorAlreadyExistsError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List all doctors",
+        "tags": [
+          "Doctors"
+        ],
+        "operationId": "GetAllDoctorsUseCase",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorsListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/doctors/{id}": {
+      "get": {
+        "summary": "Get doctor by ID",
+        "tags": [
+          "Doctors"
+        ],
+        "operationId": "GetDoctorByIdUseCase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the doctor",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorNotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update doctor by ID",
+        "tags": [
+          "Doctors"
+        ],
+        "operationId": "UpdateDoctorUseCase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the doctor",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DoctorUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorNotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete doctor by ID",
+        "tags": [
+          "Doctors"
+        ],
+        "operationId": "DeleteDoctorByIdUseCase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the doctor",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Doctor deleted successfully."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Doctor not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorNotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients": {
+      "post": {
+        "summary": "Create a new patient",
+        "tags": [
+          "Patients"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePatientBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Patient created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Patient created successfully"
+                    },
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Patient already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "VALIDATION_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Patient already exists"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "CreatePatientController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all patients",
+        "tags": [
+          "Patients"
+        ],
+        "operationId": "GetAllPatientsUseCase",
+        "responses": {
+          "200": {
+            "description": "Array of patients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientsListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/{id}": {
+      "get": {
+        "summary": "Get patient by ID",
+        "tags": [
+          "Patients"
+        ],
+        "operationId": "GetPatientByIdUseCase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the patient",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Patient found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "PATIENT_NOT_FOUND_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No patient found with the given id: 3"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "GetPatientController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update patient by ID",
+        "tags": [
+          "Patients"
+        ],
+        "operationId": "UpdatePatientUseCase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the patient",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePatientBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Patient updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "PATIENT_NOT_FOUND_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No patient found with the given id: 3"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "GetPatientController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete patient by ID",
+        "tags": [
+          "Patients"
+        ],
+        "operationId": "DeletePatientByIdUseCase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the patient",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Patient deleted successfully"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patient not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "PATIENT_NOT_FOUND_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No patient found with the given id: 3"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "GetPatientController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/appointments": {
+      "post": {
+        "summary": "Create a new appointment",
+        "tags": [
+          "Appointments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAppointmentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Appointment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Appointment created successfully"
+                    },
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "VALIDATION_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Patient not found"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "CreateAppointmentController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Doctor or patient not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "DOCTOR_NOT_FOUND_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Doctor not found"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "CreateAppointmentController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all appointments",
+        "tags": [
+          "Appointments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of appointments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentsListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/appointments/{id}": {
+      "get": {
+        "summary": "Get appointment by ID",
+        "tags": [
+          "Appointments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the appointment",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Appointment found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Appointment not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "APPOINTMENdasT_NOT_FOUND"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No appointment found with the given id: 2"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "GetAppointmentController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update appointment",
+        "tags": [
+          "Appointments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the appointment",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAppointmentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Appointment updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "VALIDATION_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "UpdateAppointmentController"
+                    },
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "id"
+                      ]
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "example": "invalid_type"
+                          },
+                          "expected": {
+                            "type": "string",
+                            "example": "number"
+                          },
+                          "received": {
+                            "type": "string",
+                            "example": "nan"
+                          },
+                          "path": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "example": [
+                              "id"
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "example": "Expected number, received nan"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "code": "invalid_type",
+                          "expected": "number",
+                          "received": "nan",
+                          "path": [
+                            "id"
+                          ],
+                          "message": "Expected number, received nan"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Appointment not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "APPOINTMENT_NOT_FOUND_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No appointment found with the given id: 2"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "UpdateAppointmentController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete appointment",
+        "tags": [
+          "Appointments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the appointment",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Appointment deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Appointment not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "APPOINTMENT_NOT_FOUND_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No appointment found with the given id: 2"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "DeleteAppointmentController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/medical-records": {
+      "post": {
+        "summary": "Create a new medical record",
+        "tags": [
+          "Medical Records"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Medical record created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Medical record created successfully"
+                    },
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Patient not found (ou outra falha de validação)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "VALIDATION_ERROR"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Patient not found"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "CreateMedicalRecordController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all medical records",
+        "tags": [
+          "Medical Records"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of medical records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicalRecordListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/medical-records/{id}": {
+      "get": {
+        "summary": "Get a medical record by ID",
+        "tags": [
+          "Medical Records"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the medical record",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Medical record found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicalRecordResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Medical record not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "MEDICAL_RECORD_NOT_FOUND"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No medical record found with the given id: 3"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "GetMedicalRecordController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update medical record by ID",
+        "tags": [
+          "Medical Records"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the medical record",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMedicalRecordBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Medical record updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicalRecordResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Medical record not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "MEDICAL_RECORD_NOT_FOUND"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No medical record found with the given id: 3"
+                    },
+                    "service": {
+                      "type": "string",
+                      "example": "UpdateMedicalRecordController"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "InternalServerError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Internal server error"
+          }
+        }
+      },
+      "DoctorsListResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "Dr. House"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "email@email.com"
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "UNAUTHORIZED"
+          },
+          "message": {
+            "type": "string",
+            "example": "Missing token"
+          },
+          "service": {
+            "type": "string",
+            "example": "AuthMiddleware"
+          }
+        }
+      },
+      "CreateDoctorBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dr. House"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "house@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        }
+      },
+      "CreateDoctorSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "example": "Doctor created successfully"
+          }
+        }
+      },
+      "DoctorAlreadyExistsError": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "code": {
+            "type": "string",
+            "example": "VALIDATION_ERROR"
+          },
+          "message": {
+            "type": "string",
+            "example": "Doctor already exists"
+          },
+          "service": {
+            "type": "string",
+            "example": "CreateDoctorController"
+          }
+        }
+      },
+      "DoctorResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Dr. House"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "dr.house@mail.com"
+          }
+        }
+      },
+      "DoctorNotFound": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 404
+          },
+          "code": {
+            "type": "string",
+            "example": "DOCTOR_NOT_FOUND_ERROR"
+          },
+          "message": {
+            "type": "string",
+            "example": "Doctor not found"
+          },
+          "service": {
+            "type": "string",
+            "example": "DoctorController"
+          }
+        }
+      },
+      "DoctorUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dr. House MD"
+          }
+        }
+      },
+      "PatientResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "example": "Jane Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "jane@example.com"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "1234567890"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1990-01-01"
+          },
+          "sex": {
+            "type": "string",
+            "example": "F"
+          },
+          "height": {
+            "type": "number",
+            "example": 1.5
+          },
+          "weight": {
+            "type": "number",
+            "example": 60
+          },
+          "doctorId": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "PatientsListResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PatientResponse"
+        }
+      },
+      "CreatePatientBody": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "phoneNumber",
+          "birthDate",
+          "sex",
+          "height",
+          "weight",
+          "doctorId"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Jane Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "jane@example.com"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "1234567890"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1990-01-01"
+          },
+          "sex": {
+            "type": "string",
+            "example": "F"
+          },
+          "height": {
+            "type": "number",
+            "example": 1.5
+          },
+          "weight": {
+            "type": "number",
+            "example": 60
+          },
+          "doctorId": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "UpdatePatientBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Jane Doe A"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "1234567898"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "1990-01-01"
+          },
+          "height": {
+            "type": "number",
+            "example": 1.5
+          },
+          "weight": {
+            "type": "number",
+            "example": 60
+          }
+        }
+      },
+      "AppointmentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "doctorId": {
+            "type": "number",
+            "example": 1
+          },
+          "patientId": {
+            "type": "number",
+            "example": 2
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-02-01T11:00:00.000Z"
+          }
+        }
+      },
+      "AppointmentsListResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AppointmentResponse"
+        }
+      },
+      "CreateAppointmentBody": {
+        "type": "object",
+        "required": [
+          "doctorId",
+          "patientId",
+          "appointmentDate"
+        ],
+        "properties": {
+          "doctorId": {
+            "type": "number",
+            "example": 1
+          },
+          "patientId": {
+            "type": "number",
+            "example": 2
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-01-01T10:00:00.000Z"
+          }
+        }
+      },
+      "UpdateAppointmentBody": {
+        "type": "object",
+        "properties": {
+          "doctorId": {
+            "type": "number",
+            "example": 1
+          },
+          "patientId": {
+            "type": "number",
+            "example": 2
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-02-01T11:00:00.000Z"
+          }
+        }
+      },
+      "MedicalRecordResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "patientId": {
+            "type": "number",
+            "example": 2
+          },
+          "doctorId": {
+            "type": "number",
+            "example": 1
+          },
+          "appointmentId": {
+            "type": "number",
+            "example": 1
+          },
+          "diagnosis": {
+            "type": "string",
+            "example": "Headache"
+          },
+          "prescription": {
+            "type": "string",
+            "example": "Aspirin"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Take 1 pill every 4 hours"
+          }
+        }
+      },
+      "MedicalRecordListResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/MedicalRecordResponse"
+        }
+      },
+      "CreateMedicalRecordBody": {
+        "type": "object",
+        "required": [
+          "patientId",
+          "doctorId",
+          "appointmentId",
+          "diagnosis",
+          "treatment",
+          "prescription"
+        ],
+        "properties": {
+          "patientId": {
+            "type": "number",
+            "example": 1
+          },
+          "doctorId": {
+            "type": "number",
+            "example": 1
+          },
+          "appointmentId": {
+            "type": "number",
+            "example": 1
+          },
+          "diagnosis": {
+            "type": "string",
+            "example": "diagnosis"
+          },
+          "treatment": {
+            "type": "string",
+            "example": "treatment"
+          },
+          "prescription": {
+            "type": "string",
+            "example": "prescription"
+          }
+        }
+      },
+      "UpdateMedicalRecordBody": {
+        "type": "object",
+        "properties": {
+          "diagnosis": {
+            "type": "string",
+            "example": "Headache"
+          },
+          "treatment": {
+            "type": "string",
+            "example": "Rest and painkillers"
+          },
+          "prescription": {
+            "type": "string",
+            "example": "Aspirin"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Take 1 pill every 4 hours"
+          }
+        }
+      }
+    }
+  }
+}

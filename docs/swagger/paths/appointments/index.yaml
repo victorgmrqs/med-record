@@ -1,0 +1,23 @@
+post:
+  summary: "Create a new appointment"
+  tags:
+    - Appointments
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/CreateAppointmentBody"
+  responses:
+    $ref: "./_post.yaml"
+
+get:
+  summary: "Get all appointments"
+  tags:
+    - Appointments
+  security:
+    - bearerAuth: []
+  responses:
+    $ref: "./_getAll.yaml"

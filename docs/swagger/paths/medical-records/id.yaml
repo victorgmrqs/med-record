@@ -1,0 +1,37 @@
+get:
+  summary: "Get a medical record by ID"
+  tags:
+    - Medical Records
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the medical record"
+      schema:
+        type: number
+  responses:
+    $ref: "./_get.yaml"
+
+put:
+  summary: "Update medical record by ID"
+  tags:
+    - Medical Records
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the medical record"
+      schema:
+        type: number
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/UpdateMedicalRecordBody"
+  responses:
+    $ref: "./_put.yaml"

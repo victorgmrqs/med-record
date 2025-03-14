@@ -1,0 +1,19 @@
+201:
+  description: Doctor created successfully
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/CreateDoctorSuccessResponse"
+400:
+  description: Bad request
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/DoctorAlreadyExistsError"
+
+500:
+  description: Internal server error
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

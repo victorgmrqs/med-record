@@ -1,0 +1,50 @@
+get:
+  summary: "Get patient by ID"
+  tags:
+    - Patients
+  operationId: "GetPatientByIdUseCase"
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the patient"
+      schema:
+        type: number
+  responses:
+    $ref: "./_get.yaml"
+
+put:
+  summary: "Update patient by ID"
+  tags:
+    - Patients
+  operationId: "UpdatePatientUseCase"
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the patient"
+      schema:
+        type: number
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/UpdatePatientBody"
+  responses:
+    $ref: "./_put.yaml"
+
+delete:
+  summary: "Delete patient by ID"
+  tags:
+    - Patients
+  operationId: "DeletePatientByIdUseCase"
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: "ID of the patient"
+      schema:
+        type: number
+  responses:
+    $ref: "./_delete.yaml"

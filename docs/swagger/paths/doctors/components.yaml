@@ -1,0 +1,166 @@
+schemas:
+  CreateDoctorBody:
+    type: object
+    required:
+      - name
+      - email
+      - password
+    properties:
+      name:
+        type: string
+        example: "Dr. House"
+      email:
+        type: string
+        format: email
+        example: "house@example.com"
+      password:
+        type: string
+        example: "123456"
+
+  CreateDoctorSuccessResponse:
+    type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      message:
+        type: string
+        example: "Doctor created successfully"
+
+  DoctorAlreadyExistsError:
+    type: object
+    properties:
+      statusCode:
+        type: number
+        example: 400
+      code:
+        type: string
+        example: "VALIDATION_ERROR"
+      message:
+        type: string
+        example: "Doctor already exists"
+      service:
+        type: string
+        example: "CreateDoctorController"
+
+  DoctorsListResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: "Dr. House"
+        email:
+          type: string
+          format: email
+          example: "email@email.com"
+
+  DoctorResponse:
+    type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      name:
+        type: string
+        example: "Dr. House"
+      email:
+        type: string
+        format: email
+        example: "dr.house@mail.com"
+
+  DoctorUpdateRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Dr. House MD"
+
+  DoctorNotFound:
+    type: object
+    properties:
+      statusCode:
+        type: number
+        example: 404
+      code:
+        type: string
+        example: "DOCTOR_NOT_FOUND_ERROR"
+      message:
+        type: string
+        example: "Doctor not found"
+      service:
+        type: string
+        example: "DoctorController"
+
+  ValidationErrorResponse:
+    type: object
+    properties:
+      statusCode:
+        type: number
+        example: 400
+      code:
+        type: string
+        example: "VALIDATION_ERROR"
+      message:
+        type: string
+        example: "Validation error"
+      service:
+        type: string
+        example: "UpdateDoctorController"
+      fields:
+        type: array
+        items:
+          type: string
+        example: ["id"]
+      issues:
+        type: array
+        items:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "invalid_type"
+            expected:
+              type: string
+              example: "number"
+            received:
+              type: string
+              example: "nan"
+            path:
+              type: array
+              items:
+                type: string
+              example: ["id"]
+            message:
+              type: string
+              example: "Expected number, received nan"
+        example:
+          - code: "invalid_type"
+            expected: "number"
+            received: "nan"
+            path: ["id"]
+            message: "Expected number, received nan"
+
+  ErrorResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "Internal server error"
+
+  UnauthorizedError:
+    type: object
+    properties:
+      code:
+        type: string
+        example: "UNAUTHORIZED"
+      message:
+        type: string
+        example: "Missing token"
+      service:
+        type: string
+        example: "AuthMiddleware"

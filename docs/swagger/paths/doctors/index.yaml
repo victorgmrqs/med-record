@@ -1,0 +1,20 @@
+post:
+  summary: "Create a new doctor"
+  tags:
+    - Doctors
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/CreateDoctorBody"
+  responses:
+    $ref: "./_post.yaml"
+
+get:
+  summary: "List all doctors"
+  tags:
+    - Doctors
+  operationId: "GetAllDoctorsUseCase"
+  responses:
+    $ref: "./_getAll.yaml"

@@ -1,0 +1,54 @@
+schemas:
+  CreateAppointmentBody:
+    type: object
+    required:
+      - doctorId
+      - patientId
+      - appointmentDate
+    properties:
+      doctorId:
+        type: number
+        example: 1
+      patientId:
+        type: number
+        example: 2
+      appointmentDate:
+        type: string
+        format: date-time
+        example: "2021-01-01T10:00:00.000Z"
+
+  UpdateAppointmentBody:
+    type: object
+    properties:
+      doctorId:
+        type: number
+        example: 1
+      patientId:
+        type: number
+        example: 2
+      appointmentDate:
+        type: string
+        format: date-time
+        example: "2021-02-01T11:00:00.000Z"
+
+  AppointmentResponse:
+    type: object
+    properties:
+      id:
+        type: number
+        example: 1
+      doctorId:
+        type: number
+        example: 1
+      patientId:
+        type: number
+        example: 2
+      appointmentDate:
+        type: string
+        format: date-time
+        example: "2021-02-01T11:00:00.000Z"
+
+  AppointmentsListResponse:
+    type: array
+    items:
+      $ref: "#/schemas/AppointmentResponse"

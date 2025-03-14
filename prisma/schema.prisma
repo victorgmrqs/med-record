@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource med_record_db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum sex {
+  M
+  F
+}
+
+model doctors {
+  id         Int       @id @default(autoincrement())
+  name       String?   @med_record_db.VarChar(150)
+  email      String?   @unique @med_record_db.VarChar(50)
+  password   String?   @med_record_db.VarChar(255)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  patients        patients[]
+  appointments    appointments[]
+  medical_records medical_records[]
+}
+
+model patients {
+  id           Int       @id @default(autoincrement())
+  name         String?   @med_record_db.VarChar(150)
+  email        String?   @unique @med_record_db.VarChar(50)
+  phone_number String?   @med_record_db.VarChar(15)
+  birth_date   DateTime  @med_record_db.Date
+  sex          sex
+  height       Decimal   @med_record_db.Decimal(3, 2)
+  weight       Decimal   @med_record_db.Decimal(5, 2)
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  deleted_at   DateTime?
+
+  doctor_id Int
+  doctor    doctors @relation(fields: [doctor_id], references: [id])
+
+  appointments    appointments[]
+  medical_records medical_records[]
+}
+
+model appointments {
+  id               Int      @id @default(autoincrement())
+  doctor_id        Int
+  patient_id       Int
+  appointment_date DateTime
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  doctor          doctors           @relation(fields: [doctor_id], references: [id])
+  patient         patients          @relation(fields: [patient_id], references: [id])
+  medical_records medical_records[]
+}
+
+model medical_records {
+  id             Int      @id @default(autoincrement())
+  doctor_id      Int
+  patient_id     Int
+  appointment_id Int
+  diagnosis      String?
+  prescription   String?
+  notes          String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  doctor      doctors      @relation(fields: [doctor_id], references: [id])
+  patient     patients     @relation(fields: [patient_id], references: [id])
+  appointment appointments @relation(fields: [appointment_id], references: [id])
+}

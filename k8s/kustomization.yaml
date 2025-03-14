@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yaml
+- service.yaml
+- configmap.yaml
+- secret.yaml
+- prisma-migrate.yaml
+- ingress.yaml
+- argo-certificate.yaml
+- certificate.yaml
+- pv-pvc.yaml
+- statefulset.yaml
+
+images:
+- name: vgmarques/med-record
+  newName: vgmarques/med-record
+  newTag: 62d20db5192181825b24c4636123c15269d9d0a2

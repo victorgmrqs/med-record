@@ -1,0 +1,67 @@
+201:
+  description: "Appointment created successfully"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: "Appointment created successfully"
+          id:
+            type: number
+            example: 1
+
+400:
+  description: "Invalid data"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 400
+          code:
+            type: string
+            example: "VALIDATION_ERROR"
+          message:
+            type: string
+            example: "Patient not found"
+          service:
+            type: string
+            example: "CreateAppointmentController"
+
+401:
+  description: "Unauthorized"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+404:
+  description: "Doctor or patient not found"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 404
+          code:
+            type: string
+            example: "DOCTOR_NOT_FOUND_ERROR"
+          message:
+            type: string
+            example: "Doctor not found"
+          service:
+            type: string
+            example: "CreateAppointmentController"
+
+500:
+  description: "Internal server error"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

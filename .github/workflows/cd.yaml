@@ -1,0 +1,66 @@
+name: CD - Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: prod
+      APP_PORT: "3000"
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+      JWT_ALGORITHM: ${{ secrets.JWT_ALGORITHM }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.14.0
+
+      - name: Install dependencies
+        run: npm install --omit=dev
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Migrate Database
+        run: npx prisma migrate deploy
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          repository: ${{ secrets.DOCKER_USERNAME }}/med-record
+          tags: ${{ secrets.DOCKER_USERNAME }}/med-record:${{ github.sha }},${{ secrets.DOCKER_USERNAME }}/med-record:latest
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v1
+        with:
+          kustomize-version: "4.1.3"
+
+      - name: Update Kubernetes Resources
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          cd k8s
+          kustomize edit set image $DOCKER_USERNAME/med-record=$DOCKER_USERNAME/med-record:${{ github.sha }}
+
+      - name: Commit Kubernetes Manifest Update
+        run: |
+          git config --global user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Update image to $DOCKER_USERNAME/med-record:${{ github.sha }}"
+
+      - name: Push Kubernetes Manifest Update
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

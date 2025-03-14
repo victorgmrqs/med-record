@@ -1,0 +1,19 @@
+200:
+  description: "Array of appointments"
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/AppointmentsListResponse"
+
+401:
+  description: "Unauthorized"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+500:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

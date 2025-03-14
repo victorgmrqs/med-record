@@ -1,0 +1,20 @@
+post:
+  summary: "Create a new patient"
+  tags:
+    - Patients
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./components.yaml#/schemas/CreatePatientBody"
+  responses:
+    $ref: "./_post.yaml"
+
+get:
+  summary: "Get all patients"
+  tags:
+    - Patients
+  operationId: "GetAllPatientsUseCase"
+  responses:
+    $ref: "./_getAll.yaml"

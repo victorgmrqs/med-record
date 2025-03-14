@@ -1,0 +1,92 @@
+200:
+  description: "Appointment updated successfully"
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/AppointmentResponse"
+401:
+  description: "Unauthorized"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+400:
+  description: "Validation error"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 400
+          code:
+            type: string
+            example: "VALIDATION_ERROR"
+          message:
+            type: string
+            example: "Validation error"
+          service:
+            type: string
+            example: "UpdateAppointmentController"
+          fields:
+            type: array
+            items:
+              type: string
+            example: ["id"]
+          issues:
+            type: array
+            items:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: "invalid_type"
+                expected:
+                  type: string
+                  example: "number"
+                received:
+                  type: string
+                  example: "nan"
+                path:
+                  type: array
+                  items:
+                    type: string
+                  example: ["id"]
+                message:
+                  type: string
+                  example: "Expected number, received nan"
+            example:
+              - code: "invalid_type"
+                expected: "number"
+                received: "nan"
+                path: ["id"]
+                message: "Expected number, received nan"
+
+404:
+  description: "Appointment not found"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 404
+          code:
+            type: string
+            example: "APPOINTMENT_NOT_FOUND_ERROR"
+          message:
+            type: string
+            example: "No appointment found with the given id: 2"
+          service:
+            type: string
+            example: "UpdateAppointmentController"
+
+500:
+  description: "Internal server error"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

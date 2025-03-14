@@ -1,0 +1,18 @@
+200:
+  description: "Array of medical records"
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/MedicalRecordListResponse"
+
+401:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+500:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"
