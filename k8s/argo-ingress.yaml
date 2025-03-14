@@ -1,27 +1,25 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: med-record-ingress
-  namespace: med-record-dev
+  name: argocd-ingress
+  namespace: argocd
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "med-record.goncalvesmarques.com"
+    - host: "argocd.goncalvesmarques.com"
       http:
         paths:
-          - pathType: Prefix
-            path: "/"
+          - path: "/"
+            pathType: Prefix
             backend:
               service:
-                name: med-record-service
+                name: argocd-server
                 port:
                   number: 80
   tls:
     - hosts:
-        - med-record.goncalvesmarques.com
-      secretName: med-record-tls
+        - argocd.goncalvesmarques.com
+      secretName: argocd-tls

@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: test
-      DATABASE_URL: "mysql://root:root@127.0.0.1:3306/med_record_db"
-      JWT_SECRET: "secret"
-      JWT_EXPIRES_IN: "300"
-      JWT_ALGORITHM: "HS256"
+      APP_PORT: "3000"
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+      JWT_ALGORITHM: ${{ secrets.JWT_ALGORITHM }}
 
     services:
       mysql:

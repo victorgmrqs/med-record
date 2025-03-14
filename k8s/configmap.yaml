@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: med-record-configmap
+  namespace: med-record-dev
+data:
+  NODE_ENV: dev
+  APP_PORT: "3000"
+  BCRYPT_SALT: "12"
+  JWT_SECRET: secret
+  JWT_EXPIRES_IN: "3600"
+  JWT_ALGORITHM: HS256
