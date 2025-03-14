@@ -7,9 +7,10 @@ export class Doctor {
     public readonly id: number,
     public name: string,
     public email: string,
-    public _password?: string,
+    private _password?: string,
     public createdAt?: Date,
     public updatedAt?: Date,
+    public deletedAt?: Date | null,
   ) {
     if (!this.isValidEmail(email)) {
       throw new AppError(400, 'VALIDATION_ERROR', 'Invalid email format', Doctor.name);
@@ -24,14 +25,6 @@ export class Doctor {
     return this._password;
   }
 
-  public static toArrayResponse(doctors: Doctor[]): DoctorResponseDTO[] {
-    return doctors.map((doctor) => ({
-      id: doctor.id,
-      name: doctor.name,
-      email: doctor.email,
-    }));
-  }
-
   public toResponse(): { id: number; name: string; email: string } {
     return {
       id: this.id,
@@ -40,7 +33,27 @@ export class Doctor {
     };
   }
 
-  public static mapDoctorToResponse(doctors: Doctor[]): { id: number; name: string; email: string }[] {
+  public static toArrayResponse(doctors: Doctor[]): DoctorResponseDTO[] {
     return doctors.map((doctor) => doctor.toResponse());
+  }
+
+  public static fromDBRepository(doctorData: {
+    id: number;
+    name: string | null;
+    email: string | null;
+    password: string | null;
+    created_at: Date;
+    updated_at: Date;
+    deleted_at?: Date | null;
+  }): Doctor {
+    return new Doctor(
+      doctorData.id,
+      doctorData.name ?? '',
+      doctorData.email ?? '',
+      doctorData.password ?? '',
+      doctorData.created_at,
+      doctorData.updated_at,
+      doctorData.deleted_at,
+    );
   }
 }
