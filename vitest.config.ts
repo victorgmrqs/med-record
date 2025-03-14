@@ -7,7 +7,18 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/tests/helpers/setup.ts'],
     coverage: {
-      include: ['src/application'],
+      provider: 'v8',
+      reporter: ['json', 'lcov'],
+      include: ['src/'],
+      exclude: [
+        'prisma',
+        'src/shared/*',
+        'src/tests/*',
+        'src/infra/*',
+        'src/adapters/http/server.ts',
+        'src/adapters/database/prisma/client.ts',
+        '**/*.spec.ts',
+      ],
     },
     sequence: {
       shuffle: false,

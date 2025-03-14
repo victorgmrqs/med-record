@@ -48,22 +48,18 @@ jobs:
       - name: Executar Testes e Gerar Cobertura
         run: npm run test:coverage
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: javascript
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.organization=${{ secrets.SONAR_ORG }}
-            -Dsonar.host.url=${{ secrets.SONAR_HOST }}
-            -Dsonar.automaticAnalysis=false
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
