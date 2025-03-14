@@ -1,5 +1,5 @@
 post:
-  summary: "Cria um novo médico"
+  summary: "Create a new doctor"
   tags:
     - Doctors
   requestBody:

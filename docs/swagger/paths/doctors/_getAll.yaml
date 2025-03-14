@@ -9,4 +9,8 @@
       schema:
         $ref: "../../components.yaml#/schemas/UnauthorizedError"
 500:
-  $ref: "../../components.yaml#/schemas/InternalServerError"
+  description: Internal server error
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

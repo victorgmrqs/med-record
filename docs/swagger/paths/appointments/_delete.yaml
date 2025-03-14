@@ -1,9 +1,11 @@
-200:
-  description: "Appointment found"
+204:
+  description: "Appointment deleted successfully"
+401:
+  description: "Unauthorized"
   content:
     application/json:
       schema:
-        $ref: "./components.yaml#/schemas/AppointmentResponse"
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
 
 404:
   description: "Appointment not found"
@@ -17,10 +19,15 @@
             example: 404
           code:
             type: string
-            example: "APPOINTMENT_NOT_FOUND"
+            example: "APPOINTMENT_NOT_FOUND_ERROR"
           message:
             type: string
             example: "No appointment found with the given id: 2"
           service:
             type: string
-            example: "GetAppointmentController"
+            example: "DeleteAppointmentController"
+500:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"

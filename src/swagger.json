@@ -12,7 +12,7 @@
     },
     {
       "description": "Production server",
-      "url": "https://med-record.com"
+      "url": "https://med-record.goncalvesmarques.com"
     }
   ],
   "security": [
@@ -113,7 +113,7 @@
     },
     "/api/v1/doctors": {
       "post": {
-        "summary": "Cria um novo médico",
+        "summary": "Create a new doctor",
         "tags": [
           "Doctors"
         ],
@@ -128,8 +128,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Médico criado com sucesso",
+          "201": {
+            "description": "Doctor created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -139,21 +139,11 @@
             }
           },
           "400": {
-            "description": "Tentativa de criar médico que já existe",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DoctorAlreadyExistsError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -196,7 +186,14 @@
             }
           },
           "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -382,11 +379,6 @@
         "tags": [
           "Patients"
         ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -445,6 +437,25 @@
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
           }
         }
       },
@@ -453,11 +464,7 @@
         "tags": [
           "Patients"
         ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "operationId": "GetAllPatientsUseCase",
         "responses": {
           "200": {
             "description": "Array of patients",
@@ -465,6 +472,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PatientsListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -478,11 +504,7 @@
         "tags": [
           "Patients"
         ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "operationId": "GetPatientByIdUseCase",
         "parameters": [
           {
             "name": "id",
@@ -506,7 +528,6 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -560,11 +581,7 @@
         "tags": [
           "Patients"
         ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "operationId": "UpdatePatientUseCase",
         "parameters": [
           {
             "name": "id",
@@ -598,7 +615,6 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -652,11 +668,7 @@
         "tags": [
           "Patients"
         ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "operationId": "DeletePatientByIdUseCase",
         "parameters": [
           {
             "name": "id",
@@ -673,7 +685,6 @@
             "description": "Patient deleted successfully"
           },
           "401": {
-            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -863,6 +874,25 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
           }
         }
       }
@@ -900,6 +930,16 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Appointment not found",
             "content": {
@@ -913,7 +953,7 @@
                     },
                     "code": {
                       "type": "string",
-                      "example": "APPOINTMENT_NOT_FOUND"
+                      "example": "APPOINTMENdasT_NOT_FOUND"
                     },
                     "message": {
                       "type": "string",
@@ -924,6 +964,15 @@
                       "example": "GetAppointmentController"
                     }
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -1128,6 +1177,16 @@
           "204": {
             "description": "Appointment deleted successfully"
           },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Appointment not found",
             "content": {
@@ -1152,6 +1211,15 @@
                       "example": "DeleteAppointmentController"
                     }
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -1228,6 +1296,25 @@
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
           }
         }
       },
@@ -1248,6 +1335,24 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MedicalRecordListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -1288,6 +1393,15 @@
               }
             }
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Medical record not found",
             "content": {
@@ -1312,6 +1426,15 @@
                       "example": "GetMedicalRecordController"
                     }
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -1556,7 +1679,7 @@
           },
           "message": {
             "type": "string",
-            "example": "No doctor found with the given id: 1"
+            "example": "Doctor not found"
           },
           "service": {
             "type": "string",
@@ -1570,11 +1693,6 @@
           "name": {
             "type": "string",
             "example": "Dr. House MD"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "emsail@mail.com"
           }
         }
       },
@@ -1614,6 +1732,10 @@
           "weight": {
             "type": "number",
             "example": 60
+          },
+          "doctorId": {
+            "type": "number",
+            "example": 1
           }
         }
       },
@@ -1632,7 +1754,8 @@
           "birthDate",
           "sex",
           "height",
-          "weight"
+          "weight",
+          "doctorId"
         ],
         "properties": {
           "name": {
@@ -1664,6 +1787,10 @@
           "weight": {
             "type": "number",
             "example": 60
+          },
+          "doctorId": {
+            "type": "number",
+            "example": 1
           }
         }
       },
@@ -1674,11 +1801,6 @@
             "type": "string",
             "example": "Jane Doe A"
           },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "jane@example.com"
-          },
           "phoneNumber": {
             "type": "string",
             "example": "1234567898"
@@ -1687,10 +1809,6 @@
             "type": "string",
             "format": "date",
             "example": "1990-01-01"
-          },
-          "sex": {
-            "type": "string",
-            "example": "F"
           },
           "height": {
             "type": "number",
@@ -1865,17 +1983,6 @@
           "notes": {
             "type": "string",
             "example": "Take 1 pill every 4 hours"
-          }
-        }
-      }
-    },
-    "responses": {
-      "InternalServerError": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Internal server error"
           }
         }
       }

@@ -12,26 +12,6 @@
             type: number
             example: 1
 
-404:
-  description: "Doctor or patient not found"
-  content:
-    application/json:
-      schema:
-        type: object
-        properties:
-          statusCode:
-            type: number
-            example: 404
-          code:
-            type: string
-            example: "DOCTOR_NOT_FOUND_ERROR"
-          message:
-            type: string
-            example: "Doctor not found"
-          service:
-            type: string
-            example: "CreateAppointmentController"
-
 400:
   description: "Invalid data"
   content:
@@ -58,6 +38,26 @@
     application/json:
       schema:
         $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+404:
+  description: "Doctor or patient not found"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 404
+          code:
+            type: string
+            example: "DOCTOR_NOT_FOUND_ERROR"
+          message:
+            type: string
+            example: "Doctor not found"
+          service:
+            type: string
+            example: "CreateAppointmentController"
 
 500:
   description: "Internal server error"

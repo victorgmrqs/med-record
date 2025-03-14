@@ -1,0 +1,39 @@
+200:
+  description: "Appointment found"
+  content:
+    application/json:
+      schema:
+        $ref: "./components.yaml#/schemas/AppointmentResponse"
+
+401:
+  description: "Unauthorized"
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/UnauthorizedError"
+
+404:
+  description: "Appointment not found"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          statusCode:
+            type: number
+            example: 404
+          code:
+            type: string
+            example: "APPOINTMENdasT_NOT_FOUND"
+          message:
+            type: string
+            example: "No appointment found with the given id: 2"
+          service:
+            type: string
+            example: "GetAppointmentController"
+
+500:
+  content:
+    application/json:
+      schema:
+        $ref: "../../components.yaml#/schemas/InternalServerError"
